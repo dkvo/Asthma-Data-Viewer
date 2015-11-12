@@ -62,4 +62,12 @@ public class DataParser implements MySQLConfig {
         }
     }
 
+    //STATION,STATION_NAME,ELEVATION,LATITUDE,LONGITUDE,DATE,MLY-TMIN-NORMAL,MLY-TMAX-NORMAL,MLY-PRCP-NORMAL
+    //GHCND:USC00327027,PETERSBURG 2 N ND US,466.3,48.0355,-98.01,201001,-43,145,55
+
+    private void parseWeatherLine (String line)
+    {
+
+    }
+
 }
