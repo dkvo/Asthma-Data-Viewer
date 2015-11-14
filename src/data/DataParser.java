@@ -50,6 +50,7 @@ public class DataParser implements MySQLConfig {
                 this.parseHealth(filePath);
                 break;
             case REGION:
+                this.parseCity(filePath);
                 break;
             default:
         }
@@ -83,6 +84,10 @@ public class DataParser implements MySQLConfig {
 
     }
 
+    /**
+     * Parses data from a health.CSV
+     * @param filePath Path to health.csv
+     */
     private void parseHealth(String filePath) {
 
         String parseQuery = null;
@@ -99,7 +104,7 @@ public class DataParser implements MySQLConfig {
             statement.execute("create index zipInd on health(county)");
 
             while (dataIterator.hasNext()) {
-                parseQuery = parseHealthLine(dataIterator.next() + "," +  dataIterator.next());
+                parseQuery = parseHealthLine(dataIterator.next() + "," + dataIterator.next());
                 if (parseQuery != null) {
                     statement.execute(parseQuery);
                 }
@@ -112,6 +117,11 @@ public class DataParser implements MySQLConfig {
         }
     }
 
+    /**
+     * Converts a line from the CSV file to a valid SQL insert statement. Omits inserts that are invalid.
+     * @param line line from dataLine ArrayList
+     * @return Returns a valid SQL insert statement.
+     */
     //ZIP code,COORDINATES,County,Year,Age Group,Number of Visits,County Fips code,Age-adjusted rate
     private String parseHealthLine(String line) {
         String[] columns = line.replace("\"", "").split(",");
@@ -127,6 +137,53 @@ public class DataParser implements MySQLConfig {
             return "INSERT INTO health(zipCode, county, year, ageGroup, numberOfVisits) VALUES(" + zipCode + ",'" + county + "'," + year + ",'" + ageGroup + "'," + numberOfVisits + ")";
         } catch (NumberFormatException e) {
             System.out.printf("Health data omitted due to invalid parse: " + e.getMessage() + "\n");
+            return null;
+        }
+    }
+
+
+    private void parseCity(String filePath) {
+
+        String parseQuery = null;
+        Iterator<String> dataIterator;
+
+
+        this.dataList = new CSVReader().readFile(filePath);
+        dataIterator = dataList.iterator();
+
+
+        try {
+            statement.execute("drop table if exists region");
+            statement.execute("create table region(county varchar(100), country varchar(100))");
+            statement.execute("create index countyIND on region(county)");
+
+            while (dataIterator.hasNext()) {
+                parseQuery = parseCityLine(dataIterator.next() + "," + dataIterator.next());
+                if (parseQuery != null) {
+                    statement.execute(parseQuery);
+                }
+            }
+
+            statement.execute("COMMIT ");
+            connection.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    //Criteria ID,Name,Canonical Name,Parent ID,Country Code,Target Type,Status
+    private String parseCityLine(String line) {
+        String[] columns = line.replace("\"", "").split(",");
+
+
+        try {
+            String county = columns[1].toUpperCase().replace("COUNTY", "");
+            String country = columns[4].toUpperCase();
+
+            return "INSERT INTO region(county, country) VALUES('" + county.replace("\'", "''") + "','" + country + "')";
+        } catch (NumberFormatException e) {
+            System.out.printf("Region data omitted due to invalid parse: " + e.getMessage() + "\n");
             return null;
         }
 
