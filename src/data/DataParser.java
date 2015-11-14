@@ -6,6 +6,8 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.Iterator;
 
 /**
  * Created by christopherbachner on 11/11/15.
@@ -17,7 +19,20 @@ public class DataParser implements MySQLConfig {
     public static final int WEATHER = 1;
     public static final int HEALTH = 2;
     public static final int REGION = 3;
+    private Connection connection = null;
+    private Statement statement = null;
+    private ArrayList<String> dataList = null;
 
+    public DataParser() {
+        try {
+            String jdbcURL = "jdbc:mysql://" + MySQLConfig.host + "/" + MySQLConfig.database;
+            connection = DriverManager.getConnection(jdbcURL, MySQLConfig.user, MySQLConfig.password);
+            statement = connection.createStatement();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
 
     /**
      * Parses Data and puts the data into the SQL Database.
@@ -27,12 +42,12 @@ public class DataParser implements MySQLConfig {
      */
     public void parseData(String filePath, int dataType) {
 
-        switch (dataType)
-        {
+        switch (dataType) {
             case WEATHER:
                 this.parseWeather(filePath);
                 break;
             case HEALTH:
+                this.parseHealth(filePath);
                 break;
             case REGION:
                 break;
@@ -43,21 +58,20 @@ public class DataParser implements MySQLConfig {
 
     /**
      * Parses the climate/weather data and puts data into SQL. Drops existing table.
+     *
      * @param filePath Path to file.
      */
 
-    private void parseWeather (String filePath)
-    {
-        Connection connection = null;
-        Statement statement = null;
-        String jdbcURL = "jdbc:mysql://" + MySQLConfig.host + "/" + MySQLConfig.database;
-        try {
-            connection = DriverManager.getConnection(jdbcURL, MySQLConfig.user, MySQLConfig.password);
-            statement = connection.createStatement();
-            statement.execute("drop table weather");
+    private void parseWeather(String filePath) {
 
-        } catch (SQLException e)
-        {
+        try {
+            this.dataList = new CSVReader().readFile(filePath);
+
+            statement.execute("drop table if exists weather");
+            statement.execute("create table weather(location varchar(1024), date varchar(100), float monthlyMax, float MonthlyMin)");
+            connection.close();
+
+        } catch (SQLException e) {
             e.printStackTrace();
         }
     }
@@ -65,9 +79,59 @@ public class DataParser implements MySQLConfig {
     //STATION,STATION_NAME,ELEVATION,LATITUDE,LONGITUDE,DATE,MLY-TMIN-NORMAL,MLY-TMAX-NORMAL,MLY-PRCP-NORMAL
     //GHCND:USC00327027,PETERSBURG 2 N ND US,466.3,48.0355,-98.01,201001,-43,145,55
 
-    private void parseWeatherLine (String line)
-    {
+    private void parseWeatherLine(String line) {
 
     }
+
+    private void parseHealth(String filePath) {
+
+        String parseQuery = null;
+        Iterator<String> dataIterator;
+
+
+        this.dataList = new CSVReader().readFile(filePath);
+        dataIterator = dataList.iterator();
+
+
+        try {
+            statement.execute("drop table if exists health");
+            statement.execute("create table health(zipCode int, county varchar(100), year int, ageGroup varchar(100), numberOfVisits int)");
+            statement.execute("create index zipInd on health(county)");
+
+            while (dataIterator.hasNext()) {
+                parseQuery = parseHealthLine(dataIterator.next() + "," +  dataIterator.next());
+                if (parseQuery != null) {
+                    statement.execute(parseQuery);
+                }
+            }
+
+            statement.execute("COMMIT ");
+            connection.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    //ZIP code,COORDINATES,County,Year,Age Group,Number of Visits,County Fips code,Age-adjusted rate
+    private String parseHealthLine(String line) {
+        String[] columns = line.replace("\"", "").split(",");
+
+
+        try {
+            int zipCode = Integer.parseInt(columns[0]);
+            String county = columns[3];
+            int year = Integer.parseInt(columns[4]);
+            String ageGroup = columns[5];
+            int numberOfVisits = Integer.parseInt(columns[6]);
+
+            return "INSERT INTO health(zipCode, county, year, ageGroup, numberOfVisits) VALUES(" + zipCode + ",'" + county + "'," + year + ",'" + ageGroup + "'," + numberOfVisits + ")";
+        } catch (NumberFormatException e) {
+            System.out.printf("Health data omitted due to invalid parse: " + e.getMessage() + "\n");
+            return null;
+        }
+
+
+    }
+
 
 }

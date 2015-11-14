@@ -12,9 +12,9 @@ Usually you only need to change username and password.
 **/
 public interface MySQLConfig
 {
-  public final static String host = "localhost";
+  public final static String host = "172.16.231.130";
   public final static int port = 3306;
-  public final static String user = "root";
-  public final static String password = "root";
-  public final static String database = "cs157a";
+  public final static String user = "cs157";
+  public final static String password = "69H,6EM7/e8sh&>jB?Wf";
+  public final static String database = "cs157";
 }

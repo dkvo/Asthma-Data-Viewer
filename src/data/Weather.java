@@ -10,10 +10,10 @@ public class Weather {
 
     private String location = null;
     private String date = null;
-    private float monthlyMax = null;
-    private float monthlyMin = null;
+    private double monthlyMax = 0.0;
+    private double monthlyMin = 0.0;
 
-    public Weather(String location, String date, float monthlyMax, float monthlyMin) {
+    public Weather(String location, String date, double monthlyMax, double monthlyMin) {
         this.location = location;
         this.date = date;
         this.monthlyMax = monthlyMax;
