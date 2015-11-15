@@ -2,25 +2,22 @@ package retrieveData;
 import java.sql.*;
 import java.util.ArrayList;
 
-public class retrieveData {
+import config.MySQLConfig;
+
+public class retrieveData implements MySQLConfig{
 	public static void main(String[] args) {
-		Connection conn = null;
-		String url = "jdbc:mysql://localhost:3306/cs157";
-		String driver = "com.mysql.jdbc.Driver";
-		String userName = "root";
-	    String password = "";
-	    Statement stmt = null;
-	    String SELECT_QUERY = "select * from health";  
-	    
-	    /*Lists store data retrieved from database*/
-	    ArrayList<Health> healthList = new ArrayList<Health>();
-	    try
-        {
-            Class.forName(driver);
-            conn = DriverManager.getConnection(url, userName, password);
-            stmt = conn.createStatement();
+		Connection connection = null;
+		Statement statement = null;
+		ArrayList<Health> healthList = new ArrayList<Health>();
+		String SELECT_HEALTH_QUERY = "select * from health";
+		 
+		try {
+            String jdbcURL = "jdbc:mysql://" + MySQLConfig.host + ":" + MySQLConfig.port + "/" + MySQLConfig.database;
+            connection = DriverManager.getConnection(jdbcURL, MySQLConfig.user, MySQLConfig.password);
+            statement = connection.createStatement();
+
             System.out.println("Connected to the database");
-            ResultSet rs = stmt.executeQuery(SELECT_QUERY);
+            ResultSet rs = statement.executeQuery(SELECT_HEALTH_QUERY);
             while (rs.next())
             {
             	Health healthData = new Health();
@@ -31,7 +28,7 @@ public class retrieveData {
                 healthData.setYear(rs.getInt("year"));
                 healthList.add(healthData);
             }
-            conn.close();
+            connection.close();
             System.out.println("Disconnected from database");
         } catch (Exception e)
         {
