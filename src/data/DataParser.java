@@ -62,7 +62,7 @@ public class DataParser implements MySQLConfig {
      *
      * @param filePath Path to file.
      */
-
+//TODO weather
     private void parseWeather(String filePath) {
 
         try {
@@ -154,8 +154,8 @@ public class DataParser implements MySQLConfig {
 
         try {
             statement.execute("drop table if exists region");
-            statement.execute("create table region(county varchar(100), country varchar(100))");
-            statement.execute("create index countyIND on region(county)");
+            statement.execute("create table region(county varchar(100), zipCode varchar(100), city varChar(100), state varchar(100))");
+            statement.execute("create index countyIND on region(zipCode)");
 
             while (dataIterator.hasNext()) {
                 parseQuery = parseCityLine(dataIterator.next() + "," + dataIterator.next());
@@ -171,17 +171,17 @@ public class DataParser implements MySQLConfig {
         }
     }
 
-
-    //Criteria ID,Name,Canonical Name,Parent ID,Country Code,Target Type,Status
+    //"zip_code","latitude","longitude","city","state","county"
     private String parseCityLine(String line) {
         String[] columns = line.replace("\"", "").split(",");
 
-
         try {
-            String county = columns[1].toUpperCase().replace("COUNTY", "");
-            String country = columns[4].toUpperCase();
+            String zipCode = columns[0];
+            String city = columns[3].toUpperCase();
+            String state = columns[4].toUpperCase();
+            String county = columns[5].toUpperCase();
 
-            return "INSERT INTO region(county, country) VALUES('" + county.replace("\'", "''") + "','" + country + "')";
+            return "INSERT INTO region(county, zipCode, city, state) VALUES('" + county.replace("\'", "''") + "','" + zipCode + "'" + "','" + city + "'" + "','" + state + "'" + "')";
         } catch (NumberFormatException e) {
             System.out.printf("Region data omitted due to invalid parse: " + e.getMessage() + "\n");
             return null;
