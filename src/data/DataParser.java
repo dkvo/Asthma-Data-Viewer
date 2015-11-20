@@ -158,7 +158,7 @@ public class DataParser implements MySQLConfig {
             statement.execute("create index countyIND on region(zipCode)");
 
             while (dataIterator.hasNext()) {
-                parseQuery = parseCityLine(dataIterator.next() + "," + dataIterator.next());
+                parseQuery = parseCityLine(dataIterator.next());
                 if (parseQuery != null) {
                     statement.execute(parseQuery);
                 }
@@ -177,9 +177,9 @@ public class DataParser implements MySQLConfig {
 
         try {
             String zipCode = columns[0];
-            String city = columns[3].toUpperCase();
-            String state = columns[4].toUpperCase();
-            String county = columns[5].toUpperCase();
+            String city = columns[3].toUpperCase().replace("\'", "''");
+            String state = columns[4].toUpperCase().replace("\'", "''");
+            String county = columns[5].toUpperCase().replace("\'", "''");
 
             return "INSERT INTO region(county, zipCode, city, state) VALUES('" + county + "',''" + zipCode + "','" + city + "','" + state + "')";
         } catch (NumberFormatException e) {
