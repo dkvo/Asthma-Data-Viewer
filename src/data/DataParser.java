@@ -143,7 +143,7 @@ public class DataParser implements MySQLConfig {
 
             return "INSERT INTO health(zipCode, county, year, ageGroup, numberOfVisits) VALUES(" + zipCode + ",'" + county + "'," + year + ",'" + ageGroup + "'," + numberOfVisits + ")";
         } catch (NumberFormatException e) {
-            System.out.printf("Health data omitted due to invalid parse: " + e.getMessage() + "\n");
+            System.out.printf("(INFO)Health data omitted due to invalid parse: " + e.getMessage() + "\n");
             return null;
         }
     }
@@ -190,11 +190,11 @@ public class DataParser implements MySQLConfig {
 
             return "INSERT INTO region(county, zipCode, city, state) VALUES('" + county + "','" + zipCode + "','" + city + "','" + state + "')";
         } catch (NumberFormatException e) {
-            System.out.printf("Region data omitted due to invalid parse: " + e.getMessage() + "\n");
+            System.out.printf("(INFO)Region data omitted due to invalid parse: " + e.getMessage() + "\n");
             return null;
         } catch (IndexOutOfBoundsException e)
         {
-            System.out.printf("Region data omitted due to invalid parse: " + e.getMessage() + "\n");
+            System.out.printf("(INFO)Region data omitted due to invalid parse: " + e.getMessage() + "\n");
             return null;
         }
 
