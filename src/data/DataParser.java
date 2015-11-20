@@ -134,9 +134,16 @@ public class DataParser implements MySQLConfig {
             String ageGroup = columns[5];
             int numberOfVisits = Integer.parseInt(columns[6]);
 
+            //Necessary because there seems to be an "AllAges" and an "All Ages" in the source
+            if (ageGroup.equals("AllAges"))
+            {
+                ageGroup = "All Ages";
+            }
+
+
             return "INSERT INTO health(zipCode, county, year, ageGroup, numberOfVisits) VALUES(" + zipCode + ",'" + county + "'," + year + ",'" + ageGroup + "'," + numberOfVisits + ")";
         } catch (NumberFormatException e) {
-            System.out.printf("Health data omitted due to invalid parse: " + e.getMessage() + "\n");
+            System.out.printf("(INFO)Health data omitted due to invalid parse: " + e.getMessage() + "\n");
             return null;
         }
     }
@@ -181,9 +188,13 @@ public class DataParser implements MySQLConfig {
             String state = columns[4].toUpperCase().replace("\'", "''");
             String county = columns[5].toUpperCase().replace("\'", "''");
 
-            return "INSERT INTO region(county, zipCode, city, state) VALUES('" + county + "',''" + zipCode + "','" + city + "','" + state + "')";
+            return "INSERT INTO region(county, zipCode, city, state) VALUES('" + county + "','" + zipCode + "','" + city + "','" + state + "')";
         } catch (NumberFormatException e) {
-            System.out.printf("Region data omitted due to invalid parse: " + e.getMessage() + "\n");
+            System.out.printf("(INFO)Region data omitted due to invalid parse: " + e.getMessage() + "\n");
+            return null;
+        } catch (IndexOutOfBoundsException e)
+        {
+            System.out.printf("(INFO)Region data omitted due to invalid parse: " + e.getMessage() + "\n");
             return null;
         }
 
