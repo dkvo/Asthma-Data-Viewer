@@ -62,14 +62,28 @@ public class DataParser implements MySQLConfig {
      *
      * @param filePath Path to file.
      */
-//TODO weather
     private void parseWeather(String filePath) {
+
+        String parseQuery = null;
+        Iterator<String> dataIterator;
 
         try {
             this.dataList = new CSVReader().readFile(filePath);
+            dataIterator = dataList.iterator();
 
             statement.execute("drop table if exists weather");
-            statement.execute("create table weather(location varchar(1024), date varchar(100), float monthlyMax, float MonthlyMin)");
+            statement.execute("create table weather(city varchar(1024), year int, month int, monthlyMax float, MonthlyMin float, monthlyNor float)");
+            statement.execute("create index weatherInd on weather(city)");
+            connection.close();
+
+            while (dataIterator.hasNext()) {
+                parseQuery = parseWeatherLine(dataIterator.next());
+                if (parseQuery != null) {
+                    statement.execute(parseQuery);
+                }
+            }
+
+            statement.execute("COMMIT ");
             connection.close();
 
         } catch (SQLException e) {
@@ -77,15 +91,39 @@ public class DataParser implements MySQLConfig {
         }
     }
 
-    //STATION,STATION_NAME,ELEVATION,LATITUDE,LONGITUDE,DATE,MLY-TMIN-NORMAL,MLY-TMAX-NORMAL,MLY-PRCP-NORMAL
-    //GHCND:USC00327027,PETERSBURG 2 N ND US,466.3,48.0355,-98.01,201001,-43,145,55
+    /**
+     * Parses each line of the weather.csv
+     * @param line Line of CSV file
+     * @return Valid SQL insert statement
+     */
+    //STATION	STATION_NAME	ELEVATION	LATITUDE	LONGITUDE	DATE	MMXT	MMNT	MNTM
+    private String parseWeatherLine(String line) {
 
-    private void parseWeatherLine(String line) {
+        String[] columns = line.split(",");
+
+        try {
+            String city = columns[1].toUpperCase().replace("\'", "''").replace(" CA US", "");
+            String year = columns[5].substring(0, 3);
+            String month = columns[5].substring(4, 5);
+            String monthMax = columns[6];
+            String monthMin = columns[7];
+            String monthNor = columns[8];
+
+            return "INSERT INTO weather(city, year, month, monthlyMax, monthlyMin, monthlyNor) VALUES('" + city + "'," + year + "," + month + "," + monthMax + "," + monthMin + "," + monthNor + ");";
+        } catch (NumberFormatException e) {
+            System.out.printf("(INFO)WEATHER data omitted due to invalid parse: " + e.getMessage() + "\n");
+            return null;
+        } catch (IndexOutOfBoundsException e) {
+            System.out.printf("(INFO)WEATHER data omitted due to invalid parse: " + e.getMessage() + "\n");
+            return null;
+        }
+
 
     }
 
     /**
      * Parses data from a health.CSV
+     *
      * @param filePath Path to health.csv
      */
     private void parseHealth(String filePath) {
@@ -119,6 +157,7 @@ public class DataParser implements MySQLConfig {
 
     /**
      * Converts a line from the CSV file to a valid SQL insert statement. Omits inserts that are invalid.
+     *
      * @param line line from dataLine ArrayList
      * @return Returns a valid SQL insert statement.
      */
@@ -135,8 +174,7 @@ public class DataParser implements MySQLConfig {
             int numberOfVisits = Integer.parseInt(columns[6]);
 
             //Necessary because there seems to be an "AllAges" and an "All Ages" in the source
-            if (ageGroup.equals("AllAges"))
-            {
+            if (ageGroup.equals("AllAges")) {
                 ageGroup = "All Ages";
             }
 
@@ -149,6 +187,12 @@ public class DataParser implements MySQLConfig {
     }
 
 
+
+    /**
+     * Parses data from a city.CSV
+     *
+     * @param filePath Path to city.csv
+     */
     private void parseCity(String filePath) {
 
         String parseQuery = null;
@@ -178,6 +222,11 @@ public class DataParser implements MySQLConfig {
         }
     }
 
+    /**
+     * Parses each line of the city.csv
+     * @param line Line of CSV file
+     * @return Valid SQL insert statement
+     */
     //"zip_code","latitude","longitude","city","state","county"
     private String parseCityLine(String line) {
         String[] columns = line.replace("\"", "").split(",");
@@ -192,8 +241,7 @@ public class DataParser implements MySQLConfig {
         } catch (NumberFormatException e) {
             System.out.printf("(INFO)Region data omitted due to invalid parse: " + e.getMessage() + "\n");
             return null;
-        } catch (IndexOutOfBoundsException e)
-        {
+        } catch (IndexOutOfBoundsException e) {
             System.out.printf("(INFO)Region data omitted due to invalid parse: " + e.getMessage() + "\n");
             return null;
         }
