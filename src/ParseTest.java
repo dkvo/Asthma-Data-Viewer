@@ -11,6 +11,7 @@ public class ParseTest {
     {
         new DataParser().parseData("health.csv", DataParser.HEALTH);
         new DataParser().parseData("city.csv", DataParser.REGION);
+        new DataParser().parseData("weather.csv", DataParser.WEATHER);
     }
 
 
