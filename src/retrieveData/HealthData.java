@@ -61,27 +61,22 @@ public class HealthData {
 	
 	public ArrayList<Health> getData(){return data;}
 	
-	public void insert() throws SQLException{
+	/* INSERT FUNCTION FOR HEALTH TABLE */
+	public void insertHealthTable() throws SQLException{
 		Health h = new Health();
 		Scanner sc = new Scanner(System.in);
 	
-	/* Get input from keyboard */
-	//zipcode, ageGroup, year, numberOfVisits, city, state, 	
-		System.out.println("Enter your input below, Leave blank for no input.\n");
+		System.out.println("Enter your input below.");
 		System.out.println("Enter zipCode:");
 		int zipCode = Integer.parseInt(sc.nextLine());
-		System.out.println("Enter group of age(1 for \"AllAges\" / 2 for \"Children (0-17)\" / 3 for \"Adult (18+)\"): ");
-		String ageGroup = sc.nextLine();
 		System.out.println("Enter county: ");
 		String county = sc.nextLine();
 		System.out.println("Enter year: ");
 		int year = Integer.parseInt(sc.nextLine());
+		System.out.println("Enter group of age(1 for \"AllAges\" / 2 for \"Children (0-17)\" / 3 for \"Adult (18+)\"): ");
+		String ageGroup = sc.nextLine();
 		System.out.println("Enter number of visits: ");
 		int numOfVisits = Integer.parseInt(sc.nextLine());
-		System.out.println("Enter city: ");
-		String city = sc.nextLine();
-		System.out.println("Enter state: ");
-		String state = sc.nextLine();
 		
 		/* Insert data into health table : zipcode, county, year, ageGroup, numberOfVisits */
 		PreparedStatement stmt = (PreparedStatement) connection.prepareStatement(INSERT_HEALTH_QUERY);
@@ -95,17 +90,69 @@ public class HealthData {
 		if (rowsInserted > 0) {
 		    System.out.println("A new row is added in health table");
 		}
+	}
+	
+	/* INSERT FUNCTION FOR REGION TABLE */
+	public void insertRegionTable() throws SQLException{
+		Health h = new Health();
+		Scanner sc = new Scanner(System.in);
+	
+		System.out.println("Enter your input below.");
+		System.out.println("Enter county: ");
+		String county = sc.nextLine();
+		System.out.println("Enter zipCode:");
+		int zipCode = Integer.parseInt(sc.nextLine());
+		System.out.println("Enter city: ");
+		String city = sc.nextLine();
+		System.out.println("Enter state: ");
+		String state = sc.nextLine();
+		
 		
 		/* Insert data into region table : county, zipCode, city, state */
-		stmt = (PreparedStatement) connection.prepareStatement(INSERT_HEALTH_QUERY);
+		PreparedStatement stmt = (PreparedStatement) connection.prepareStatement(INSERT_HEALTH_QUERY);
 		stmt.setString(1, county);
 		stmt.setInt(2, zipCode);
 		stmt.setString(3, city);
 		stmt.setString(4, state);
 		
-		rowsInserted = stmt.executeUpdate();
+		int rowsInserted = stmt.executeUpdate();
 		if (rowsInserted > 0) {
-		    System.out.println("A new row is added in region table");
+		    System.out.println("A new row is added in health table");
+		}
+	}
+	
+	/* INSERT FUNCTION FOR REGION TABLE */
+	public void insertWeatherTable() throws SQLException{
+		Health h = new Health();
+		Scanner sc = new Scanner(System.in);
+	
+		System.out.println("Enter your input below.");
+		System.out.println("Enter city: ");
+		String city = sc.nextLine();
+		System.out.println("Enter year:");
+		int year = Integer.parseInt(sc.nextLine());
+		System.out.println("Enter month:");
+		int month = Integer.parseInt(sc.nextLine());
+		System.out.println("Enter monthly max temperature:");
+		float monthlyMax = Float.parseFloat(sc.nextLine());
+		System.out.println("Enter monthly min temperature:");
+		float monthlyMin = Float.parseFloat(sc.nextLine());
+		System.out.println("Enter monthly average temperature:");
+		float monthlyNor = Float.parseFloat(sc.nextLine());
+		
+		
+		/* Insert data into region table : city, year, month, monthlyMax, monthlyMin, monthlyNor */
+		PreparedStatement stmt = (PreparedStatement) connection.prepareStatement(INSERT_HEALTH_QUERY);
+		stmt.setString(1, city);
+		stmt.setInt(2, year);
+		stmt.setInt(3, month);
+		stmt.setFloat(4, monthlyMax);
+		stmt.setFloat(5, monthlyMin);
+		stmt.setFloat(6, monthlyNor);
+		
+		int rowsInserted = stmt.executeUpdate();
+		if (rowsInserted > 0) {
+		    System.out.println("A new row is added in health table");
 		}
 	}
 	
