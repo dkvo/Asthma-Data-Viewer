@@ -74,7 +74,7 @@ public class DataParser implements MySQLConfig {
 
             statement.execute("drop table if exists weather");
             statement.execute("create table weather(city varchar(1024), year int, month int, monthlyMax float, MonthlyMin float, monthlyNor float)");
-            statement.execute("create index weatherInd on weather(city)");
+            //statement.execute("create index weatherInd on weather(city)");
 
             while (dataIterator.hasNext()) {
                 parseQuery = parseWeatherLine(dataIterator.next());
@@ -103,11 +103,11 @@ public class DataParser implements MySQLConfig {
 
         try {
             String city = columns[1].toUpperCase().replace("\'", "''").replace(" CA US", "");
-            String year = columns[5].substring(0, 3);
-            String month = columns[5].substring(4, 5);
-            String monthMax = columns[6];
-            String monthMin = columns[7];
-            String monthNor = columns[8];
+            String year = columns[5].substring(0, 4);
+            String month = columns[5].substring(4, 6);
+            float monthMax = Float.parseFloat(columns[6]) / 10;
+            float monthMin = Float.parseFloat(columns[7]) / 10;
+            float monthNor = Float.parseFloat(columns[8]) / 10;
 
             return "INSERT INTO weather(city, year, month, monthlyMax, monthlyMin, monthlyNor) VALUES('" + city + "'," + year + "," + month + "," + monthMax + "," + monthMin + "," + monthNor + ");";
         } catch (NumberFormatException e) {
