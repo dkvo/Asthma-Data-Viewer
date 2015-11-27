@@ -91,183 +91,42 @@ public class HealthData {
 		}
 	}
 	
-	/* DELETE FUNCTION FOR HEALTH TABLE */
-	public void deleteHealthTable(){
+	/*As selecting a row, you will get all the value in that row and put it into an object Health as a parameter to the function.
+	 * delete function will then delete the data from database.
+	 */
+	public void deleteData(Health h){
 		try {
 			connection = DriverManager.getConnection(jdbcURL, MySQLConfig.user, MySQLConfig.password);
 			Scanner sc = new Scanner(System.in);
 			String choice = "";
 			boolean notFirst = false;
 			
-			/* zipcode, county, year, ageGroup, numberOfVisits */
-			System.out.println("Want to delete data by zipcode? (Y/N):");
-			choice = sc.nextLine();
-			if(choice.equals("Y")){
-				System.out.println("Enter which zipcode you want to delete: ");
-				int zipcode = Integer.parseInt(sc.nextLine());
-				DELETE_HEALTH_QUERY += "zipcode =" + zipcode;
-				notFirst = true;
-			}
-			System.out.println("Want to delete data by county? (Y/N):");
-			choice = sc.nextLine();
-			if(choice.equals("Y")){
-				System.out.println("Enter which county you want to delete: ");
-				String county = sc.nextLine();
-				if(notFirst == true) {DELETE_HEALTH_QUERY += ", ";} else {notFirst = true;}
-					DELETE_HEALTH_QUERY += "county = \"" + county + "\"";
-				
-			}
-			System.out.println("Want to delete data by year? (Y/N):");
-			choice = sc.nextLine();
-			if(choice.equals("Y")){
-				System.out.println("Enter which zipcode you want to delete: ");
-				int year = Integer.parseInt(sc.nextLine());
-				if(notFirst == true) {DELETE_HEALTH_QUERY += ", ";} else {notFirst = true;}
-					DELETE_HEALTH_QUERY += "year =" + year;
-			}
-			System.out.println("Want to delete data by ageGroup? (Y/N):");
-			choice = sc.nextLine();
-			if(choice.equals("Y")){
-				System.out.println("Enter which zipcode you want to delete: ");
-				String ageGroup = sc.nextLine();
-				if(notFirst == true) {DELETE_HEALTH_QUERY += ", ";} else {notFirst = true;}
-					DELETE_HEALTH_QUERY += "agegroup = \"" + ageGroup + "\"";
-			}
-			System.out.println("Want to delete data by numOfVisits? (Y/N):");
-			choice = sc.nextLine();
-			if(choice.equals("Y")){
-				System.out.println("Enter which zipcode you want to delete: ");
-				int numOfVisits = Integer.parseInt(sc.nextLine());
-				if(notFirst == true) {DELETE_HEALTH_QUERY += ", ";} else {notFirst = true;}
-					DELETE_HEALTH_QUERY += "numberOfVisits =" + numOfVisits;
-			}
 			
+			DELETE_HEALTH_QUERY += "zipcode =" + h.getZipCode() + ", county = \"" + h.getCounty() + "\"" + ", year = " + h.getYear()
+					+ ",agegroup = \"" + h.getAgeGroup() + "\"" + ", numberOfVisits =" + h.getNumOfVisits();
+		
 			PreparedStatement stmt = (PreparedStatement) connection.prepareStatement(DELETE_HEALTH_QUERY);
 			int rowsInserted = stmt.executeUpdate();
 			if (rowsInserted > 0) {
 			    System.out.println("The row has been deleted in health table");
 			}
 			DELETE_HEALTH_QUERY = "delete from health where ";
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
-	
-	/* DELETE FUNCTION FOR REGION TABLE */
-	public void deleteRegionTable(){
-		try {
-			connection = DriverManager.getConnection(jdbcURL, MySQLConfig.user, MySQLConfig.password);
-			Scanner sc = new Scanner(System.in);
-			String choice = "";
-			boolean notFirst = false;
-			
-			/* county, zipCode, city, state */
-			System.out.println("Want to delete data by county? (Y/N):");
-			choice = sc.nextLine();
-			if(choice.equals("Y")){
-				System.out.println("Enter which county you want to delete: ");
-				String county = sc.nextLine();
-				DELETE_REGION_QUERY += "county = \"" + county + "\"";
-				notFirst = true;
-			}
-			System.out.println("Want to delete data by zipcode? (Y/N):");
-			choice = sc.nextLine();
-			if(choice.equals("Y")){
-				System.out.println("Enter which zipcode you want to delete: ");
-				int zipCode = Integer.parseInt(sc.nextLine());
-				if(notFirst == true) {DELETE_REGION_QUERY += ", ";} else {notFirst = true;}
-					DELETE_REGION_QUERY += "zipcode =" + zipCode;
-			}
-			System.out.println("Want to delete data by city? (Y/N):");
-			choice = sc.nextLine();
-			if(choice.equals("Y")){
-				System.out.println("Enter which city you want to delete: ");
-				String city = sc.nextLine();
-				if(notFirst == true) {DELETE_REGION_QUERY += ", ";} else {notFirst = true;}
-					DELETE_REGION_QUERY += "city = \"" + city + "\"";
-			}
-			System.out.println("Want to delete data by state? (Y/N):");
-			choice = sc.nextLine();
-			if(choice.equals("Y")){
-				System.out.println("Enter which state you want to delete: ");
-				String state = sc.nextLine();
-				if(notFirst == true) {DELETE_REGION_QUERY += ", ";} else {notFirst = true;}
-					DELETE_REGION_QUERY += "state = \"" + state + "\"";
-			}
-			PreparedStatement stmt = (PreparedStatement) connection.prepareStatement(DELETE_REGION_QUERY);
+		/* Delete in region table */
+			DELETE_REGION_QUERY += "county = \"" + h.getCounty() + "\"" + ", zipcode =" + h.getZipCode() + ", city = \"" + h.getCity() + "\"" 
+					+ ", state = \"" + h.getState() + "\"";
+			stmt = (PreparedStatement) connection.prepareStatement(DELETE_REGION_QUERY);
 			System.out.println(stmt);
-			int rowsInserted = stmt.executeUpdate();
+			rowsInserted = stmt.executeUpdate();
 			if (rowsInserted > 0) {
 			    System.out.println("The row has been deleted in region table");
 			}
 			DELETE_REGION_QUERY = "delete from region where ";
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
-	
-	/* DELETE FUNCTION FOR WEATHER TABLE */
-	public void deleteWeatherTable(){
-		try {
-			connection = DriverManager.getConnection(jdbcURL, MySQLConfig.user, MySQLConfig.password);
-			Scanner sc = new Scanner(System.in);
-			String choice = "";
-			boolean notFirst = false;
 			
-			/* city, year, month, monthlyMax, monthlyMin, monthlyNor */
-			System.out.println("Want to delete data by city? (Y/N):");
-			choice = sc.nextLine();
-			if(choice.equals("Y")){
-				System.out.println("Enter which city you want to delete: ");
-				String city = sc.nextLine();
-				DELETE_WEATHER_QUERY += "city = \"" + city + "\"";
-				notFirst = true;
-			}
-			System.out.println("Want to delete data by year? (Y/N):");
-			choice = sc.nextLine();
-			if(choice.equals("Y")){
-				System.out.println("Enter which year you want to delete: ");
-				int year = Integer.parseInt(sc.nextLine());
-				if(notFirst == true) {DELETE_WEATHER_QUERY += ", ";} else {notFirst = true;}
-					DELETE_WEATHER_QUERY += "year =" + year;
-				
-			}
-			System.out.println("Want to delete data by month? (Y/N):");
-			choice = sc.nextLine();
-			if(choice.equals("Y")){
-				System.out.println("Enter which city you want to delete: ");
-				int month = Integer.parseInt(sc.nextLine());
-				if(notFirst == true) {DELETE_WEATHER_QUERY += ", ";} else {notFirst = true;}
-					DELETE_WEATHER_QUERY += "month =" + month;
-			}
-			System.out.println("Want to delete data by monthly max temperature? (Y/N):");
-			choice = sc.nextLine();
-			if(choice.equals("Y")){
-				System.out.println("Enter which max temperature you want to delete: ");
-				Float monthlyMax = Float.parseFloat(sc.nextLine());
-				if(notFirst == true) {DELETE_WEATHER_QUERY += ", ";} else {notFirst = true;}
-					DELETE_WEATHER_QUERY += "MonthlyMax =" + monthlyMax;
-			}
-			System.out.println("Want to delete data by monthly min temperature? (Y/N):");
-			choice = sc.nextLine();
-			if(choice.equals("Y")){
-				System.out.println("Enter which min temperature you want to delete: ");
-				Float monthlyMin = Float.parseFloat(sc.nextLine());
-				if(notFirst == true) {DELETE_WEATHER_QUERY += ", ";} else {notFirst = true;}
-					DELETE_WEATHER_QUERY += "MonthlyMin =" + monthlyMin;
-			}
-			System.out.println("Want to delete data by monthly normal temperature? (Y/N):");
-			choice = sc.nextLine();
-			if(choice.equals("Y")){
-				System.out.println("Enter which normal temperature you want to delete: ");
-				Float monthlyNor = Float.parseFloat(sc.nextLine());
-				if(notFirst == true) {DELETE_WEATHER_QUERY += ", ";} else {notFirst = true;}
-					DELETE_WEATHER_QUERY += "monthlyNor =" + monthlyNor;
-			}
-			PreparedStatement stmt = (PreparedStatement) connection.prepareStatement(DELETE_WEATHER_QUERY);
-			int rowsInserted = stmt.executeUpdate();
+			/* Delete from weather table */
+			DELETE_WEATHER_QUERY += "city = \"" + h.getCity() + "\"" + ", year =" + h.getYear() + ", month =" + h.getMonth()
+					+ ", MonthlyMax =" + h.getMMax() + ", MonthlyMin =" + h.getMMin() + ", monthlyNor =" + h.getMNor();
+			stmt = (PreparedStatement) connection.prepareStatement(DELETE_WEATHER_QUERY);
+			rowsInserted = stmt.executeUpdate();
 			if (rowsInserted > 0) {
 			    System.out.println("The row has been deleted in weather table");
 			}
@@ -277,8 +136,7 @@ public class HealthData {
 			e.printStackTrace();
 		}
 	}
-	
-	
+
 	/* SHOW ALL COLUMNS IN DATABASE */
 	public void showAllData(){
 		try {
@@ -446,4 +304,193 @@ public class HealthData {
 			e.printStackTrace();
 		}
 	}
+	
+	/* DELETE FUNCTION FOR HEALTH TABLE */
+	public void deleteHealthTable(){
+		try {
+			connection = DriverManager.getConnection(jdbcURL, MySQLConfig.user, MySQLConfig.password);
+			Scanner sc = new Scanner(System.in);
+			String choice = "";
+			boolean notFirst = false;
+			
+			/* zipcode, county, year, ageGroup, numberOfVisits */
+			System.out.println("Want to delete data by zipcode? (Y/N):");
+			choice = sc.nextLine();
+			if(choice.equals("Y")){
+				System.out.println("Enter which zipcode you want to delete: ");
+				int zipcode = Integer.parseInt(sc.nextLine());
+				DELETE_HEALTH_QUERY += "zipcode =" + zipcode;
+				notFirst = true;
+			}
+			System.out.println("Want to delete data by county? (Y/N):");
+			choice = sc.nextLine();
+			if(choice.equals("Y")){
+				System.out.println("Enter which county you want to delete: ");
+				String county = sc.nextLine();
+				if(notFirst == true) {DELETE_HEALTH_QUERY += ", ";} else {notFirst = true;}
+					DELETE_HEALTH_QUERY += "county = \"" + county + "\"";
+				
+			}
+			System.out.println("Want to delete data by year? (Y/N):");
+			choice = sc.nextLine();
+			if(choice.equals("Y")){
+				System.out.println("Enter which zipcode you want to delete: ");
+				int year = Integer.parseInt(sc.nextLine());
+				if(notFirst == true) {DELETE_HEALTH_QUERY += ", ";} else {notFirst = true;}
+					DELETE_HEALTH_QUERY += "year =" + year;
+			}
+			System.out.println("Want to delete data by ageGroup? (Y/N):");
+			choice = sc.nextLine();
+			if(choice.equals("Y")){
+				System.out.println("Enter which zipcode you want to delete: ");
+				String ageGroup = sc.nextLine();
+				if(notFirst == true) {DELETE_HEALTH_QUERY += ", ";} else {notFirst = true;}
+					DELETE_HEALTH_QUERY += "agegroup = \"" + ageGroup + "\"";
+			}
+			System.out.println("Want to delete data by numOfVisits? (Y/N):");
+			choice = sc.nextLine();
+			if(choice.equals("Y")){
+				System.out.println("Enter which zipcode you want to delete: ");
+				int numOfVisits = Integer.parseInt(sc.nextLine());
+				if(notFirst == true) {DELETE_HEALTH_QUERY += ", ";} else {notFirst = true;}
+					DELETE_HEALTH_QUERY += "numberOfVisits =" + numOfVisits;
+			}
+			
+			PreparedStatement stmt = (PreparedStatement) connection.prepareStatement(DELETE_HEALTH_QUERY);
+			int rowsInserted = stmt.executeUpdate();
+			if (rowsInserted > 0) {
+			    System.out.println("The row has been deleted in health table");
+			}
+			DELETE_HEALTH_QUERY = "delete from health where ";
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	/* DELETE FUNCTION FOR REGION TABLE */
+	public void deleteRegionTable(){
+		try {
+			connection = DriverManager.getConnection(jdbcURL, MySQLConfig.user, MySQLConfig.password);
+			Scanner sc = new Scanner(System.in);
+			String choice = "";
+			boolean notFirst = false;
+			
+			/* county, zipCode, city, state */
+			System.out.println("Want to delete data by county? (Y/N):");
+			choice = sc.nextLine();
+			if(choice.equals("Y")){
+				System.out.println("Enter which county you want to delete: ");
+				String county = sc.nextLine();
+				DELETE_REGION_QUERY += "county = \"" + county + "\"";
+				notFirst = true;
+			}
+			System.out.println("Want to delete data by zipcode? (Y/N):");
+			choice = sc.nextLine();
+			if(choice.equals("Y")){
+				System.out.println("Enter which zipcode you want to delete: ");
+				int zipCode = Integer.parseInt(sc.nextLine());
+				if(notFirst == true) {DELETE_REGION_QUERY += ", ";} else {notFirst = true;}
+					DELETE_REGION_QUERY += "zipcode =" + zipCode;
+			}
+			System.out.println("Want to delete data by city? (Y/N):");
+			choice = sc.nextLine();
+			if(choice.equals("Y")){
+				System.out.println("Enter which city you want to delete: ");
+				String city = sc.nextLine();
+				if(notFirst == true) {DELETE_REGION_QUERY += ", ";} else {notFirst = true;}
+					DELETE_REGION_QUERY += "city = \"" + city + "\"";
+			}
+			System.out.println("Want to delete data by state? (Y/N):");
+			choice = sc.nextLine();
+			if(choice.equals("Y")){
+				System.out.println("Enter which state you want to delete: ");
+				String state = sc.nextLine();
+				if(notFirst == true) {DELETE_REGION_QUERY += ", ";} else {notFirst = true;}
+					DELETE_REGION_QUERY += "state = \"" + state + "\"";
+			}
+			PreparedStatement stmt = (PreparedStatement) connection.prepareStatement(DELETE_REGION_QUERY);
+			System.out.println(stmt);
+			int rowsInserted = stmt.executeUpdate();
+			if (rowsInserted > 0) {
+			    System.out.println("The row has been deleted in region table");
+			}
+			DELETE_REGION_QUERY = "delete from region where ";
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
+	/* DELETE FUNCTION FOR WEATHER TABLE */
+	public void deleteWeatherTable(){
+		try {
+			connection = DriverManager.getConnection(jdbcURL, MySQLConfig.user, MySQLConfig.password);
+			Scanner sc = new Scanner(System.in);
+			String choice = "";
+			boolean notFirst = false;
+			
+			/* city, year, month, monthlyMax, monthlyMin, monthlyNor */
+			System.out.println("Want to delete data by city? (Y/N):");
+			choice = sc.nextLine();
+			if(choice.equals("Y")){
+				System.out.println("Enter which city you want to delete: ");
+				String city = sc.nextLine();
+				DELETE_WEATHER_QUERY += "city = \"" + city + "\"";
+				notFirst = true;
+			}
+			System.out.println("Want to delete data by year? (Y/N):");
+			choice = sc.nextLine();
+			if(choice.equals("Y")){
+				System.out.println("Enter which year you want to delete: ");
+				int year = Integer.parseInt(sc.nextLine());
+				if(notFirst == true) {DELETE_WEATHER_QUERY += ", ";} else {notFirst = true;}
+					DELETE_WEATHER_QUERY += "year =" + year;
+				
+			}
+			System.out.println("Want to delete data by month? (Y/N):");
+			choice = sc.nextLine();
+			if(choice.equals("Y")){
+				System.out.println("Enter which city you want to delete: ");
+				int month = Integer.parseInt(sc.nextLine());
+				if(notFirst == true) {DELETE_WEATHER_QUERY += ", ";} else {notFirst = true;}
+					DELETE_WEATHER_QUERY += "month =" + month;
+			}
+			System.out.println("Want to delete data by monthly max temperature? (Y/N):");
+			choice = sc.nextLine();
+			if(choice.equals("Y")){
+				System.out.println("Enter which max temperature you want to delete: ");
+				Float monthlyMax = Float.parseFloat(sc.nextLine());
+				if(notFirst == true) {DELETE_WEATHER_QUERY += ", ";} else {notFirst = true;}
+					DELETE_WEATHER_QUERY += "MonthlyMax =" + monthlyMax;
+			}
+			System.out.println("Want to delete data by monthly min temperature? (Y/N):");
+			choice = sc.nextLine();
+			if(choice.equals("Y")){
+				System.out.println("Enter which min temperature you want to delete: ");
+				Float monthlyMin = Float.parseFloat(sc.nextLine());
+				if(notFirst == true) {DELETE_WEATHER_QUERY += ", ";} else {notFirst = true;}
+					DELETE_WEATHER_QUERY += "MonthlyMin =" + monthlyMin;
+			}
+			System.out.println("Want to delete data by monthly normal temperature? (Y/N):");
+			choice = sc.nextLine();
+			if(choice.equals("Y")){
+				System.out.println("Enter which normal temperature you want to delete: ");
+				Float monthlyNor = Float.parseFloat(sc.nextLine());
+				if(notFirst == true) {DELETE_WEATHER_QUERY += ", ";} else {notFirst = true;}
+					DELETE_WEATHER_QUERY += "monthlyNor =" + monthlyNor;
+			}
+			PreparedStatement stmt = (PreparedStatement) connection.prepareStatement(DELETE_WEATHER_QUERY);
+			int rowsInserted = stmt.executeUpdate();
+			if (rowsInserted > 0) {
+			    System.out.println("The row has been deleted in weather table");
+			}
+			DELETE_WEATHER_QUERY = "delete from weather where ";
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
 }
+
+
