@@ -69,6 +69,7 @@ public class DataParser implements MySQLConfig {
         Iterator<String> dataIterator;
 
         try {
+            System.out.printf("Parsing Weather...");
             this.dataList = new CSVReader().readFile(filePath);
             dataIterator = dataList.iterator();
 
@@ -85,6 +86,7 @@ public class DataParser implements MySQLConfig {
 
             statement.execute("COMMIT ");
             connection.close();
+            System.out.printf("Done.\n");
 
         } catch (SQLException e) {
             e.printStackTrace();
@@ -139,6 +141,7 @@ public class DataParser implements MySQLConfig {
         this.dataList = new CSVReader().readFile(filePath);
         dataIterator = dataList.iterator();
 
+        System.out.printf("Parsing Health...");
 
         try {
             statement.execute("drop table if exists health");
@@ -154,6 +157,7 @@ public class DataParser implements MySQLConfig {
 
             statement.execute("COMMIT ");
             connection.close();
+            System.out.printf("Done.\n");
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -207,6 +211,7 @@ public class DataParser implements MySQLConfig {
 
         this.dataList = new CSVReader().readFile(filePath);
         dataIterator = dataList.iterator();
+        System.out.printf("Parsing City...");
 
 
         try {
@@ -223,6 +228,7 @@ public class DataParser implements MySQLConfig {
 
             statement.execute("COMMIT ");
             connection.close();
+            System.out.printf("Done.\n");
         } catch (SQLException e) {
             e.printStackTrace();
         }
