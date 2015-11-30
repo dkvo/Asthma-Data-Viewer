@@ -141,26 +141,41 @@ public class HealthData {
 	}
 
 	/* SHOW ALL COLUMNS IN DATABASE */
-	public void showAllData(){
+	public ArrayList<Health> showAllData(){
+		ArrayList<Health> list = new ArrayList<Health>();
 		try {
 			connection = DriverManager.getConnection(jdbcURL, MySQLConfig.user, MySQLConfig.password);
 			Statement stmt = connection.createStatement();
 			ResultSet result = stmt.executeQuery(SELECT_ALL_QUERY);
 			int count = 0;
 			
+			
 			/* Get and print out data from health table : zipcode, county, city, state, year, month, ageGroup, numberOfVisits, MMax, MMin, MNor */
 			while(result.next()){
+				Health data = new Health();
 				int zipcode = result.getInt(1);
+				data.setZipCode(zipcode);
 				String county = result.getString(2);
+				data.setCounty(county);
 				String city = result.getString(3);
+				data.setCity(city);
 				String state = result.getString(4);
+				data.setState(state);
 				int year = result.getInt(5);
+				data.setYear(year);
 				int month = result.getInt(6);
+				data.setMonth(month);
 				String ageGroup = result.getString(7);
+				data.setAgeGroup(ageGroup);
 				int numOfVisits = result.getInt(8);
+				data.setNumOfVisits(numOfVisits);
 				float MMax = result.getFloat(9);
+				data.setMMax(MMax);
 				float MMin = result.getFloat(10);
+				data.setMMin(MMin);
 				float MNor = result.getFloat(11);
+				data.setMNor(MNor);
+				list.add(data);
 				
 				System.out.println(zipcode + " , " + county + " , " + city + " , " + state + " , " + year + " , " + month + " , " + ageGroup + " , " + numOfVisits + " , " + MMax + " , " + MMin + " , " + MNor);
 				count++;
@@ -169,7 +184,8 @@ public class HealthData {
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}	
+		}
+		return list;
 	}
 	
 	/* UPDATE FUNCTION */
