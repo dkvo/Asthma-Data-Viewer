@@ -62,7 +62,7 @@ public class Health {
 	public void setAgeGroup(String group){ageGroup = group;}
 	public void setCounty(String county){this.county = county;}
 	public void setCity(String city){this.city = city;}
-	public void setState(String state){this.state = county;}
+	public void setState(String state){this.state = state;}
 	public void setMonth(int month){this.month = month;}
 	public void setMMax(float max){monthlyMax = max;}
 	public void setMMin(float min){monthlyMin = min;}
