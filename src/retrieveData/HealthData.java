@@ -232,55 +232,10 @@ public class HealthData {
 				comma = true;
 			}
 			
-			if(!h.getCounty().equals("") && comma == true){
-				CONDITION += ", county = \"" + h.getCounty() + "\"";
-			}
-			else CONDITION += "county = \"" + h.getCounty() + "\"";
-			
-			if(!h.getCity().equals("") && comma == true){
-				CONDITION += ", city = \"" + h.getCity() + "\"";
-			}
-			else CONDITION += "city = \"" + h.getCity() + "\"";
-			
-			if(!h.getState().equals("") && comma == true){
-				CONDITION += ", state = \"" + h.getState() + "\"";
-			}
-			else CONDITION += "state = \"" + h.getState() + "\"";
-			
-			if(h.getYear() != 0 && comma == true){
-				CONDITION += ", year = " + h.getYear();
-			}
-			else CONDITION += "year = " + h.getYear();
-			
-			if(h.getMonth() != 0 && comma == true){
-				CONDITION += ", month = " + h.getMonth();
-			}
-			else CONDITION += "month = " + h.getMonth();
-			
 			if(!h.getAgeGroup().equals("") && comma == true){
 				CONDITION += ", agegroup = \"" + h.getAgeGroup() + "\"";
 			}
 			else CONDITION += "agegroup = \"" + h.getAgeGroup() + "\"";
-			
-			if(h.getNumOfVisits() != 0 && comma == true){
-				CONDITION += ", numberofvisits = " + h.getNumOfVisits();
-			}
-			else CONDITION += "numberofvisits = " + h.getNumOfVisits();
-			
-			if(h.getMMax() != 0 && comma == true){
-				CONDITION += ", monthlymax = " + h.getMMax();
-			}
-			else CONDITION += "monthlymax = " + h.getMMax();
-			
-			if(h.getMMin() != 0 && comma == true){
-				CONDITION += ", monthlymin = " + h.getMMin();
-			}
-			else CONDITION += "monthlymin = " + h.getMMin();
-			
-			if(h.getMNor() != 0 && comma == true){
-				CONDITION += ", monthlynor = " + h.getMNor();
-			}
-			else CONDITION += "monthlynor = " + h.getMNor();
 			
 			Statement stmt = connection.createStatement();
 			ResultSet result = stmt.executeQuery(SEARCH_QUERY);
