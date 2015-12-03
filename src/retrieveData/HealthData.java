@@ -64,7 +64,6 @@ public class HealthData {
 
 		/* Insert data into health table : zipcode, county, year, ageGroup, numberOfVisits */
 		PreparedStatement stmt = (PreparedStatement) connection.prepareStatement(INSERT_HEALTH_QUERY);
-		System.out.println("Test: " + h.getZipCode());
 		stmt.setInt(1, h.getZipCode());
 		stmt.setString(2, h.getCounty());
 		stmt.setInt(3, h.getYear());
@@ -127,7 +126,6 @@ public class HealthData {
 			DELETE_REGION_QUERY += "county = \"" + h.getCounty() + "\"" + ", zipcode =" + h.getZipCode() + ", city = \"" + h.getCity() + "\"" 
 					+ ", state = \"" + h.getState() + "\"";
 			stmt = (PreparedStatement) connection.prepareStatement(DELETE_REGION_QUERY);
-			System.out.println(stmt);
 			rowsInserted = stmt.executeUpdate();
 			if (rowsInserted > 0) {
 			    System.out.println("The row has been deleted in region table");
@@ -186,10 +184,8 @@ public class HealthData {
 				data.setMNor(MNor);
 				list.add(data);
 				
-				System.out.println(zipcode + " , " + county + " , " + city + " , " + state + " , " + year + " , " + month + " , " + ageGroup + " , " + numOfVisits + " , " + MMax + " , " + MMin + " , " + MNor);
 				count++;
 			}	
-			System.out.println("Total = " + count);
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -304,7 +300,7 @@ public class HealthData {
             try {
                     connection = DriverManager.getConnection(jdbcURL, MySQLConfig.user, MySQLConfig.password);
                     Statement stmt = connection.createStatement();
-                    ResultSet result = stmt.executeQuery(query);
+                    ResultSet result = stmt.executeQuery(ANALYZE_QUEURY);
                    
                     while(result.next()){
                             AnalyzeData data = new AnalyzeData();
@@ -312,12 +308,13 @@ public class HealthData {
                             data.setCounty(county);
                             int year = result.getInt(2);
                             data.setYear(year);
-                            float avgvisit = result.getFloat(3);
+                            float avgvisit = result.getFloat("avgVisits");
                             data.setAvgVisit(avgvisit);
-                            float avg = result.getFloat(4);
-                            data.setAvgVisit(avg);
+                            float avg = result.getFloat("avg(monthlyNor)");
+                            data.setAVG(avg);
                             list.add(data);
                     }
+                    return list;
             }catch (Exception e) {
                     e.printStackTrace();
             }
