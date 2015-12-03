@@ -77,6 +77,8 @@ public class WeatherFrame extends JFrame {
         JButton btnDelete = new JButton("delete");
         btnDelete.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
+            	DeleteFrame delete = new DeleteFrame();
+            	delete.setVisible(true);
             }
         });
         btnDelete.setBounds(444, 217, 117, 29);
@@ -85,6 +87,8 @@ public class WeatherFrame extends JFrame {
         JButton btnSearch = new JButton("search");
         btnSearch.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
+            	SelectFrame search = new SelectFrame();
+            	search.setVisible(true);
             }
         });
         btnSearch.setBounds(573, 217, 117, 29);
