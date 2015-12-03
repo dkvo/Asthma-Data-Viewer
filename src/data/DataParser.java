@@ -74,7 +74,7 @@ public class DataParser implements MySQLConfig {
             dataIterator = dataList.iterator();
 
             statement.execute("drop table if exists weather");
-            statement.execute("create table weather(city varchar(1024), year int, month int, monthlyMax float, MonthlyMin float, monthlyNor float)");
+            statement.execute("create table weather(city varchar(1024) not NULL, year int, month int, monthlyMax float, MonthlyMin float, monthlyNor float)");
             //statement.execute("create index weatherInd on weather(city)");
 
             while (dataIterator.hasNext()) {
@@ -145,7 +145,7 @@ public class DataParser implements MySQLConfig {
 
         try {
             statement.execute("drop table if exists health");
-            statement.execute("create table health(zipCode int, county varchar(100), year int, ageGroup varchar(100), numberOfVisits int)");
+            statement.execute("create table health(zipCode int not null, county varchar(100), year int, ageGroup varchar(100), numberOfVisits int)");
             statement.execute("create index zipInd on health(county)");
 
             while (dataIterator.hasNext()) {
@@ -216,7 +216,7 @@ public class DataParser implements MySQLConfig {
 
         try {
             statement.execute("drop table if exists region");
-            statement.execute("create table region(county varchar(100), zipCode int, city varChar(100), state varchar(100))");
+            statement.execute("create table region(county varchar(100), zipCode int not null, city varChar(100), state varchar(100))");
             statement.execute("create index countyIND on region(zipCode)");
 
             while (dataIterator.hasNext()) {
