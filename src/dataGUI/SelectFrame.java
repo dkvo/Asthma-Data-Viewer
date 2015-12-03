@@ -75,6 +75,7 @@ public class SelectFrame extends JFrame {
             			new SelectFrame();
             		}
             	}
+            	dispose();
             	setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
             }
         });

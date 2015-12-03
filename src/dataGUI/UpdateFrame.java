@@ -161,7 +161,9 @@ public class UpdateFrame extends JFrame {
 					healthData.updateData(health);
 					setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 				}
+				dispose();
 			}
+			
 		});
 		contentPane.add(btnSubmit, "cell 1 5,alignx right");
 	}

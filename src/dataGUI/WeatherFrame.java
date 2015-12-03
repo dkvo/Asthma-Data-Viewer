@@ -23,9 +23,10 @@ import retrieveData.HealthData;
 public class WeatherFrame extends JFrame {
 
     private JPanel contentPane;
-    private JTable table;
+    private JTable table= new JTable();
     HealthData health = new HealthData();
     private DefaultTableModel model;
+    private static WeatherFrame frame;
     String[] columnNames = {"zipcode", "county", "city", "state", "year", "month","ageGroup",
                             "numOfVisits", "MonthlyMax", "MonthlyMin", "MonthlyNor"};
 
@@ -36,7 +37,7 @@ public class WeatherFrame extends JFrame {
         EventQueue.invokeLater(new Runnable() {
             public void run() {
                 try {
-                    WeatherFrame frame = new WeatherFrame();
+                    frame = new WeatherFrame();
                     frame.setVisible(true);
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -61,7 +62,7 @@ public class WeatherFrame extends JFrame {
         contentPane.add(scrollPane);
 
         populateTable();
-        table = new JTable(model);
+        table.setModel(model);
 
         scrollPane.setViewportView(table);
 
@@ -112,7 +113,8 @@ public class WeatherFrame extends JFrame {
         JButton btnRefresh = new JButton("refresh");
         btnRefresh.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-            	new WeatherFrame();
+            	populateTable();
+            	
             }
         });
         btnRefresh.setBounds(29, 217, 117, 29);
@@ -121,12 +123,13 @@ public class WeatherFrame extends JFrame {
         JButton btnAnalyze = new JButton("Analyze");
         btnAnalyze.addActionListener(new ActionListener() {
         	public void actionPerformed(ActionEvent e) {
-        		AnalyzeFrame analyze = new AnalyzeFrame();
+        		ShowAnalyze analyze = new ShowAnalyze(health.analyze());
         		analyze.setVisible(true);
         	}
         });
         btnAnalyze.setBounds(662, 217, 117, 29);
         contentPane.add(btnAnalyze);
+        
     }
 
     @SuppressWarnings("serial")
@@ -150,5 +153,6 @@ public class WeatherFrame extends JFrame {
         			         temp.get(i).getMonth(), temp.get(i).getAgeGroup(), temp.get(i).getNumOfVisits(), temp.get(i).getMMax(), temp.get(i).getMMin(), temp.get(i).getMNor()};
         	model.addRow(data);
         }
+        table.setModel(model);
     }
 }

@@ -11,6 +11,7 @@ import javax.swing.table.DefaultTableModel;
 
 import retrieveData.AnalyzeData;
 import retrieveData.Health;
+
 import javax.swing.JTable;
 import javax.swing.JScrollPane;
 
@@ -28,18 +29,39 @@ public class ShowAnalyze extends JFrame {
 	 * @param arrayList 
 	 */
 	public ShowAnalyze(ArrayList<AnalyzeData> arrayList) {
+		/*
+		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		setBounds(100, 100, 800, 300);
+		contentPane = new JPanel();
+		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
+		setContentPane(contentPane);
+		contentPane.setLayout(null);
+		this.list  = new ArrayList<Health>();
+		for (int i = 0; i < arrayList.size(); i++)
+			list.add(arrayList.get(i));
+		
+		JScrollPane scrollPane = new JScrollPane();
+		scrollPane.setBounds(6, 6, 788, 266);
+		contentPane.add(scrollPane);
+		populateTable();
+		table = new JTable(model);
+		scrollPane.setViewportView(table);
+		 */
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
 		contentPane = new JPanel();
+		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
+		
+		this.list  = new ArrayList<AnalyzeData>();
+		for (int i = 0; i < arrayList.size(); i++)
+			list.add(arrayList.get(i));
 		
 		JScrollPane scrollPane = new JScrollPane();
 		scrollPane.setBounds(6, 6, 438, 266);
 		contentPane.add(scrollPane);
-		this.list  = new ArrayList<AnalyzeData>();
-		for (int i = 0; i < arrayList.size(); i++)
-			list.add(arrayList.get(i));
+		
 		
 		populateTable();
 		table = new JTable();
@@ -49,8 +71,8 @@ public class ShowAnalyze extends JFrame {
 	
 	public void populateTable() {
     	
-    	model = new DefaultTableModel(){
-    	
+		model = new DefaultTableModel(){
+	    	
             @Override
             public boolean isCellEditable(int row, int column) {
                //all cells false

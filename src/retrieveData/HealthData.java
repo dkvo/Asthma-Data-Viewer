@@ -35,9 +35,11 @@ public class HealthData {
 	private static String UPDATE_HEALTH_QUERY = "update health set " + UPDATE_SET_VALUE + " where " + CONDITION +";";
 	private static String UPDATE_REGION_QUERY = "update region set " + UPDATE_SET_VALUE + " where " + CONDITION ;
 	private static String UPDATE_WEATHER_QUERY = "update weather set " + UPDATE_SET_VALUE + " where " + CONDITION +";";
-	private static String ANALYZE_QUEURY = " select distinct county,year, avg(numberofvisits) as avgVisits, avg(monthlyNor) from" + "("+
-"select health.zipcode, health.county, region.city, state, weather.year, weather.month, ageGroup, numberofvisits, monthlyMax, monthlyMin, monthlyNor" +
-"from health, region, weather where ";
+	private static String ANALYZE_QUEURY = " select distinct county,year, avg(numberofvisits) as avgVisits, avg(monthlyNor)  from " + "(" +
+"select health.zipcode, health.county, region.city, state, weather.year, weather.month, ageGroup, numberofvisits, monthlyMax, monthlyMin, monthlyNor " +
+"from health, region, weather where health.zipcode = region.zipcode and region.city = weather.city and weather.year = health.year and monthlyNor > -999.9 " +
+"order by zipcode, weather.month, ageGroup) as test group by county, year order by avgVisits desc;";
+
 	private ArrayList<Health> data;
 	Connection connection = null;
 	Statement statement = null;
@@ -58,7 +60,7 @@ public class HealthData {
 	
 	/* INSERT FUNCTION */
 	public void insertData(Health h) throws SQLException{
-		Scanner sc = new Scanner(System.in);
+		
 
 		/* Insert data into health table : zipcode, county, year, ageGroup, numberOfVisits */
 		PreparedStatement stmt = (PreparedStatement) connection.prepareStatement(INSERT_HEALTH_QUERY);
@@ -107,7 +109,7 @@ public class HealthData {
 	public void deleteData(Health h){
 		try {
 			connection = DriverManager.getConnection(jdbcURL, MySQLConfig.user, MySQLConfig.password);
-			Scanner sc = new Scanner(System.in);
+			
 			String choice = "";
 			boolean notFirst = false;
 			
@@ -204,7 +206,7 @@ public class HealthData {
 	public void updateData(Health h){
 		try {
 			connection = DriverManager.getConnection(jdbcURL, MySQLConfig.user, MySQLConfig.password);
-			Scanner sc = new Scanner(System.in);
+			
 			UPDATE_SET_VALUE = "";
 			CONDITION = "";
 			
@@ -293,38 +295,35 @@ public class HealthData {
 		return list;
 	}
 	
-	public ArrayList<AnalyzeData> analyze(Health h)
-	{
-		ArrayList<AnalyzeData> list = new ArrayList<AnalyzeData>();
-		String query = "health." + h.getZipCode() + " = region." + h.getZipCode() + " and " + 
-		              "region." + h.getCity() + " = weather." + h.getCity() + " and weather."
-		               + h.getYear() + " = health." + h.getYear() + " and "+ h.getMNor()+ " > -999.9 "
-		               + "order by zipcode, weather.month, ageGroup) as test group by county, year order by avgVisits desc ;";
+	public ArrayList<AnalyzeData> analyze()
+    {
+            ArrayList<AnalyzeData> list = new ArrayList<AnalyzeData>();
+            String query = "select distinct county,year, avg(numberofvisits) as avgVisits, avg(monthlyNor) from (" +
+            SELECT_ALL_QUERY + ") as test group by county, year order by avgVisits desc";
 
-		               
-		try {
-			connection = DriverManager.getConnection(jdbcURL, MySQLConfig.user, MySQLConfig.password);
-			Statement stmt = connection.createStatement();
-			ResultSet result = stmt.executeQuery(query);
-			
-			while(result.next()){
-				AnalyzeData data = new AnalyzeData();
-				String county = result.getString(2);
-				data.setCounty(county);
-				int year = result.getInt(5);
-				data.setYear(year);
-				float avgvisit = result.getFloat("avgVisits");
-				data.setAvgVisit(avgvisit);
-				float avg = result.getFloat("avg(monthlyNor)");
-				data.setAvgVisit(avg);
-				list.add(data);
-			}
-		}catch (Exception e) {
-			e.printStackTrace();
-		}
-		return list;
-		
-	}
+            try {
+                    connection = DriverManager.getConnection(jdbcURL, MySQLConfig.user, MySQLConfig.password);
+                    Statement stmt = connection.createStatement();
+                    ResultSet result = stmt.executeQuery(query);
+                   
+                    while(result.next()){
+                            AnalyzeData data = new AnalyzeData();
+                            String county = result.getString(1);
+                            data.setCounty(county);
+                            int year = result.getInt(2);
+                            data.setYear(year);
+                            float avgvisit = result.getFloat(3);
+                            data.setAvgVisit(avgvisit);
+                            float avg = result.getFloat(4);
+                            data.setAvgVisit(avg);
+                            list.add(data);
+                    }
+            }catch (Exception e) {
+                    e.printStackTrace();
+            }
+            return list;
+           
+    }
 	
 }
 
