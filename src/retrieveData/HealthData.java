@@ -216,32 +216,52 @@ public class HealthData {
         }
 }
 	
-	public void searchData(Health h){
-		boolean comma = false;
-		try {
-			connection = DriverManager.getConnection(jdbcURL, MySQLConfig.user, MySQLConfig.password);
-			if(h.getZipCode() != 0){
-				CONDITION += "zipcode = " + h.getZipCode();
-				comma = true;
-			}
-			
-
-			if(!h.getAgeGroup().equals("") && comma == true){
-				CONDITION += ", agegroup = \'" + h.getAgeGroup() + "\'";
-			}
-			else CONDITION += "agegroup = \'" + h.getAgeGroup() + "\'";
-			
-			
-			
-			Statement stmt = connection.createStatement();
-			ResultSet result = stmt.executeQuery(SEARCH_QUERY);
-			CONDITION = "";
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}				
-	}
-	
+    public Health searchData(Health h){
+        boolean comma = false;
+        Health data = new Health();
+        try {
+            connection = DriverManager.getConnection(jdbcURL, MySQLConfig.user, MySQLConfig.password);
+            CONDITION += "zipcode = " + h.getZipCode() + " and agegroup = '" + h.getAgeGroup() + "' and month = " + h.getMonth();
+            
+            
+            Statement stmt = connection.createStatement();
+            ResultSet result = stmt.executeQuery(SEARCH_QUERY);
+            
+            int zipcode = result.getInt(1);
+            data.setZipCode(zipcode);
+            String county = result.getString(2);
+            data.setCounty(county);
+            String city = result.getString(3);
+            data.setCity(city);
+            String state = result.getString(4);
+            data.setState(state);
+            int year = result.getInt(5);
+            data.setYear(year);
+            int month = result.getInt(6);
+            data.setMonth(month);
+            String ageGroup = result.getString(7);
+            data.setAgeGroup(ageGroup);
+            int numOfVisits = result.getInt(8);
+            data.setNumOfVisits(numOfVisits);
+            float MMax = result.getFloat(9);
+            data.setMMax(MMax);
+            float MMin = result.getFloat(10);
+            data.setMMin(MMin);
+            float MNor = result.getFloat(11);
+            data.setMNor(MNor);
+            
+            CONDITION = "";
+            
+            return data;
+            
+        } catch (SQLException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+        return data;
+        
+    }
 	public ArrayList<String> selectAgeGroup(int zipcode)
 	{
 		ArrayList<String> list = new ArrayList<String>();
