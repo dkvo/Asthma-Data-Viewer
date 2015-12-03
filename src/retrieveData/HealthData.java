@@ -97,50 +97,49 @@ public class HealthData {
 	/*As selecting a row, you will get all the value in that row and put it into an object Health as a parameter to the function.
 	 * delete function will then delete the data from database.
 	 */
-	public void deleteData(Health h){
-		try {
-			connection = DriverManager.getConnection(jdbcURL, MySQLConfig.user, MySQLConfig.password);
-			Scanner sc = new Scanner(System.in);
-			String choice = "";
-			boolean notFirst = false;
-			
-			
-			DELETE_HEALTH_QUERY += "zipcode =" + h.getZipCode() + " and county = \'" + h.getCounty() + "\'" + " and year = " + h.getYear()
-					+ " and agegroup = \'" + h.getAgeGroup() + "\'" + " and numberOfVisits =" + h.getNumOfVisits();
-		
-			PreparedStatement stmt = (PreparedStatement) connection.prepareStatement(DELETE_HEALTH_QUERY);
-			int rowsInserted = stmt.executeUpdate();
-			if (rowsInserted > 0) {
-			    System.out.println("The row has been deleted in health table");
-			}
-			DELETE_HEALTH_QUERY = "delete from health where ";
-		/* Delete in region table */
-			DELETE_REGION_QUERY += "county = \'" + h.getCounty() + "\'" + " and zipcode =" + h.getZipCode() + " and city = \'" + h.getCity() + "\'" 
-					+ " and state = \'" + h.getState() + "\'";
-			stmt = (PreparedStatement) connection.prepareStatement(DELETE_REGION_QUERY);
-			System.out.println(stmt);
-			rowsInserted = stmt.executeUpdate();
-			if (rowsInserted > 0) {
-			    System.out.println("The row has been deleted in region table");
-			}
-			DELETE_REGION_QUERY = "delete from region where ";
-			
-			/* Delete from weather table */
-			DELETE_WEATHER_QUERY = "delete from weather where ";
-			DELETE_WEATHER_QUERY += "city = \'" + h.getCity() + "\'" + " and year =" + h.getYear() + " and month =" + h.getMonth()
-					+ " and MonthlyMax =" + h.getMMax() + " and MonthlyMin =" + h.getMMin() + " and monthlyNor =" + h.getMNor();
-			stmt = (PreparedStatement) connection.prepareStatement(DELETE_WEATHER_QUERY);
-			rowsInserted = stmt.executeUpdate();
-			if (rowsInserted > 0) {
-			    System.out.println("The row has been deleted in weather table");
-			}
-
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
-
+    public void deleteData(Health h){
+        try {
+            connection = DriverManager.getConnection(jdbcURL, MySQLConfig.user, MySQLConfig.password);
+            Scanner sc = new Scanner(System.in);
+            String choice = "";
+            boolean notFirst = false;
+            
+            
+            DELETE_HEALTH_QUERY += "zipcode =" + h.getZipCode() + " and county = \'" + h.getCounty() + "\'" + " and year = " + h.getYear()
+            + " and agegroup = \'" + h.getAgeGroup() + "\'" + " and numberOfVisits =" + h.getNumOfVisits();
+            
+            PreparedStatement stmt = (PreparedStatement) connection.prepareStatement(DELETE_HEALTH_QUERY);
+            int rowsInserted = stmt.executeUpdate();
+            if (rowsInserted > 0) {
+                System.out.println("The row has been deleted in health table");
+            }
+            DELETE_HEALTH_QUERY = "delete from health where ";
+            /* Delete in region table */
+            DELETE_REGION_QUERY += "county = \'" + h.getCounty() + "\'" + " and zipcode =" + h.getZipCode() + " and city = \'" + h.getCity() + "\'"
+            + " and state = \'" + h.getState() + "\'";
+            stmt = (PreparedStatement) connection.prepareStatement(DELETE_REGION_QUERY);
+            System.out.println(stmt);
+            rowsInserted = stmt.executeUpdate();
+            if (rowsInserted > 0) {
+                System.out.println("The row has been deleted in region table");
+            }
+            DELETE_REGION_QUERY = "delete from region where ";
+            
+            /* Delete from weather table */
+            DELETE_WEATHER_QUERY = "delete from weather where ";
+            DELETE_WEATHER_QUERY += "city = \'" + h.getCity() + "\'" + " and year =" + h.getYear() + " and month =" + h.getMonth()
+            + " and MonthlyMax =" + h.getMMax() + " and MonthlyMin =" + h.getMMin() + " and monthlyNor =" + h.getMNor();
+            stmt = (PreparedStatement) connection.prepareStatement(DELETE_WEATHER_QUERY);
+            rowsInserted = stmt.executeUpdate();
+            if (rowsInserted > 0) {
+                System.out.println("The row has been deleted in weather table");
+            }
+            
+        } catch (SQLException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+    }
 	/* SHOW ALL COLUMNS IN DATABASE */
 	public ArrayList<Health> showAllData(){
 		ArrayList<Health> list = new ArrayList<Health>();
