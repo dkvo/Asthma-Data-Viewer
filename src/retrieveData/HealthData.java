@@ -216,74 +216,52 @@ public class HealthData {
         }
 }
 	
-	public void searchData(Health h){
-		boolean comma = false;
-		try {
-			connection = DriverManager.getConnection(jdbcURL, MySQLConfig.user, MySQLConfig.password);
-			if(h.getZipCode() != 0){
-				CONDITION += "zipcode = " + h.getZipCode();
-				comma = true;
-			}
-			
-			if(!h.getCounty().equals("") && comma == true){
-				CONDITION += ", county = \'" + h.getCounty() + "\'";
-			}
-			else CONDITION += "county = \'" + h.getCounty() + "\'";
-			
-			if(!h.getCity().equals("") && comma == true){
-				CONDITION += ", city = \'" + h.getCity() + "\'";
-			}
-			else CONDITION += "city = \'" + h.getCity() + "\'";
-			
-			if(!h.getState().equals("") && comma == true){
-				CONDITION += ", state = \'" + h.getState() + "\'";
-			}
-			else CONDITION += "state = \'" + h.getState() + "\'";
-			
-			if(h.getYear() != 0 && comma == true){
-				CONDITION += ", year = " + h.getYear();
-			}
-			else CONDITION += "year = " + h.getYear();
-			
-			if(h.getMonth() != 0 && comma == true){
-				CONDITION += ", month = " + h.getMonth();
-			}
-			else CONDITION += "month = " + h.getMonth();
-			
-			if(!h.getAgeGroup().equals("") && comma == true){
-				CONDITION += ", agegroup = \'" + h.getAgeGroup() + "\'";
-			}
-			else CONDITION += "agegroup = \'" + h.getAgeGroup() + "\'";
-			
-			if(h.getNumOfVisits() != 0 && comma == true){
-				CONDITION += ", numberofvisits = " + h.getNumOfVisits();
-			}
-			else CONDITION += "numberofvisits = " + h.getNumOfVisits();
-			
-			if(h.getMMax() != 0 && comma == true){
-				CONDITION += ", monthlymax = " + h.getMMax();
-			}
-			else CONDITION += "monthlymax = " + h.getMMax();
-			
-			if(h.getMMin() != 0 && comma == true){
-				CONDITION += ", monthlymin = " + h.getMMin();
-			}
-			else CONDITION += "monthlymin = " + h.getMMin();
-			
-			if(h.getMNor() != 0 && comma == true){
-				CONDITION += ", monthlynor = " + h.getMNor();
-			}
-			else CONDITION += "monthlynor = " + h.getMNor();
-			
-			Statement stmt = connection.createStatement();
-			ResultSet result = stmt.executeQuery(SEARCH_QUERY);
-			CONDITION = "";
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}				
-	}
-	
+    public Health searchData(Health h){
+        boolean comma = false;
+        Health data = new Health();
+        try {
+            connection = DriverManager.getConnection(jdbcURL, MySQLConfig.user, MySQLConfig.password);
+            CONDITION += "zipcode = " + h.getZipCode() + " and agegroup = '" + h.getAgeGroup() + "' and month = " + h.getMonth();
+            
+            
+            Statement stmt = connection.createStatement();
+            ResultSet result = stmt.executeQuery(SEARCH_QUERY);
+            
+            int zipcode = result.getInt(1);
+            data.setZipCode(zipcode);
+            String county = result.getString(2);
+            data.setCounty(county);
+            String city = result.getString(3);
+            data.setCity(city);
+            String state = result.getString(4);
+            data.setState(state);
+            int year = result.getInt(5);
+            data.setYear(year);
+            int month = result.getInt(6);
+            data.setMonth(month);
+            String ageGroup = result.getString(7);
+            data.setAgeGroup(ageGroup);
+            int numOfVisits = result.getInt(8);
+            data.setNumOfVisits(numOfVisits);
+            float MMax = result.getFloat(9);
+            data.setMMax(MMax);
+            float MMin = result.getFloat(10);
+            data.setMMin(MMin);
+            float MNor = result.getFloat(11);
+            data.setMNor(MNor);
+            
+            CONDITION = "";
+            
+            return data;
+            
+        } catch (SQLException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+        return data;
+        
+    }
 	public ArrayList<String> selectAgeGroup(int zipcode)
 	{
 		ArrayList<String> list = new ArrayList<String>();
