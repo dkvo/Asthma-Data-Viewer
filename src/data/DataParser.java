@@ -75,7 +75,7 @@ public class DataParser implements MySQLConfig {
 
             statement.execute("drop table if exists weather");
             statement.execute("create table weather(city varchar(1024) not NULL, year int, month int, monthlyMax float, MonthlyMin float, monthlyNor float)");
-            //statement.execute("create index weatherInd on weather(city)");
+            statement.execute("create index weatherInd on weather(city)");
 
             while (dataIterator.hasNext()) {
                 parseQuery = parseWeatherLine(dataIterator.next());
