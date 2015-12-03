@@ -29,24 +29,7 @@ public class ShowAnalyze extends JFrame {
 	 * @param arrayList 
 	 */
 	public ShowAnalyze(ArrayList<AnalyzeData> arrayList) {
-		/*
-		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		setBounds(100, 100, 800, 300);
-		contentPane = new JPanel();
-		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
-		setContentPane(contentPane);
-		contentPane.setLayout(null);
-		this.list  = new ArrayList<Health>();
-		for (int i = 0; i < arrayList.size(); i++)
-			list.add(arrayList.get(i));
 		
-		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setBounds(6, 6, 788, 266);
-		contentPane.add(scrollPane);
-		populateTable();
-		table = new JTable(model);
-		scrollPane.setViewportView(table);
-		 */
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
 		contentPane = new JPanel();
@@ -63,8 +46,9 @@ public class ShowAnalyze extends JFrame {
 		contentPane.add(scrollPane);
 		
 		
+		
+		table = new JTable(model);
 		populateTable();
-		table = new JTable();
 		scrollPane.setViewportView(table);
 	}
 	
@@ -87,5 +71,6 @@ public class ShowAnalyze extends JFrame {
         	Object[] data = {list.get(i).getCounty(), list.get(i).getYear(), list.get(i).getAvgVisit(), list.get(i).getAVG()};
         	model.addRow(data);
         }
+        table.setModel(model);
     }
 }

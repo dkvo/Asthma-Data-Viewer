@@ -23,7 +23,7 @@ import retrieveData.HealthData;
 public class WeatherFrame extends JFrame {
 
     private JPanel contentPane;
-    private JTable table= new JTable();
+    private JTable table;
     HealthData health = new HealthData();
     private DefaultTableModel model;
     private static WeatherFrame frame;
@@ -61,9 +61,9 @@ public class WeatherFrame extends JFrame {
         scrollPane.setBounds(6, 25, 788, 180);
         contentPane.add(scrollPane);
 
+       
+        table = new JTable(model);
         populateTable();
-        table.setModel(model);
-
         scrollPane.setViewportView(table);
 
         JButton btnInsert = new JButton("insert");
