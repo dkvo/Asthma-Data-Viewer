@@ -45,8 +45,8 @@ public class ShowSearch extends JFrame {
 		JScrollPane scrollPane = new JScrollPane();
 		scrollPane.setBounds(6, 6, 788, 266);
 		contentPane.add(scrollPane);
-		populateTable();
 		table = new JTable(model);
+		populateTable();
 		scrollPane.setViewportView(table);
 		
 		
@@ -70,5 +70,6 @@ public void populateTable() {
         			         list.get(i).getMonth(), list.get(i).getAgeGroup(), list.get(i).getNumOfVisits(), list.get(i).getMMax(), list.get(i).getMMin(), list.get(i).getMNor()};
         	model.addRow(data);
         }
+        table.setModel(model);
     }
 }
