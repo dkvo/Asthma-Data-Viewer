@@ -17,7 +17,7 @@ public class HealthData {
 	private static final String SELECT_ALL_QUERY = "select health.zipcode, health.county, region.city, state, weather.year, weather.month, ageGroup, numberofvisits, monthlyMax, monthlyMin, monthlyNor "
 			+ "from health, region, weather " + "where health.zipcode = region.zipcode and region.city = weather.city and weather.year = health.year "
 			+ "order by zipcode, weather.month;";
-	private static String UPDATE_SET_VALUE = "";
+	
 	private static String CONDITION = "";
 	private static String SEARCH_QUERY = "select * from (" + SELECT_ALL_QUERY + ") as tab where " + CONDITION;
 	private static final String SELECT_HEALTH_QUERY = "select * from health";
@@ -30,7 +30,7 @@ public class HealthData {
 	private static String DELETE_REGION_QUERY = "delete from region where ";
 	private static String DELETE_WEATHER_QUERY = "delete from weather where ";
 	
-	private static String UPDATE_HEALTH_QUERY = "update health set " + UPDATE_SET_VALUE + " where " + CONDITION ;
+	
 	private ArrayList<Health> data;
 	Connection connection = null;
 	Statement statement = null;
@@ -105,8 +105,8 @@ public class HealthData {
 			boolean notFirst = false;
 			
 			
-			DELETE_HEALTH_QUERY += "zipcode =" + h.getZipCode() + ", county = \"" + h.getCounty() + "\"" + ", year = " + h.getYear()
-					+ ",agegroup = \"" + h.getAgeGroup() + "\"" + ", numberOfVisits =" + h.getNumOfVisits();
+			DELETE_HEALTH_QUERY += "zipcode =" + h.getZipCode() + " and county = \"" + h.getCounty() + "\"" + " and year = " + h.getYear()
+					+ " and agegroup = \"" + h.getAgeGroup() + "\"" + " and numberOfVisits =" + h.getNumOfVisits();
 		
 			PreparedStatement stmt = (PreparedStatement) connection.prepareStatement(DELETE_HEALTH_QUERY);
 			int rowsInserted = stmt.executeUpdate();
@@ -115,8 +115,8 @@ public class HealthData {
 			}
 			DELETE_HEALTH_QUERY = "delete from health where ";
 		/* Delete in region table */
-			DELETE_REGION_QUERY += "county = \"" + h.getCounty() + "\"" + ", zipcode =" + h.getZipCode() + ", city = \"" + h.getCity() + "\"" 
-					+ ", state = \"" + h.getState() + "\"";
+			DELETE_REGION_QUERY += "county = \"" + h.getCounty() + "\"" + " and zipcode =" + h.getZipCode() + " and city = \"" + h.getCity() + "\"" 
+					+ " and state = \"" + h.getState() + "\"";
 			stmt = (PreparedStatement) connection.prepareStatement(DELETE_REGION_QUERY);
 			System.out.println(stmt);
 			rowsInserted = stmt.executeUpdate();
@@ -126,8 +126,8 @@ public class HealthData {
 			DELETE_REGION_QUERY = "delete from region where ";
 			
 			/* Delete from weather table */
-			DELETE_WEATHER_QUERY += "city = \"" + h.getCity() + "\"" + ", year =" + h.getYear() + ", month =" + h.getMonth()
-					+ ", MonthlyMax =" + h.getMMax() + ", MonthlyMin =" + h.getMMin() + ", monthlyNor =" + h.getMNor();
+			DELETE_WEATHER_QUERY += "city = \"" + h.getCity() + "\"" + " and year =" + h.getYear() + " and month =" + h.getMonth()
+					+ "and MonthlyMax =" + h.getMMax() + " and MonthlyMin =" + h.getMMin() + " and monthlyNor =" + h.getMNor();
 			stmt = (PreparedStatement) connection.prepareStatement(DELETE_WEATHER_QUERY);
 			rowsInserted = stmt.executeUpdate();
 			if (rowsInserted > 0) {
@@ -177,14 +177,15 @@ public class HealthData {
 				data.setMNor(MNor);
 				list.add(data);
 				
-				System.out.println(zipcode + " , " + county + " , " + city + " , " + state + " , " + year + " , " + month + " , " + ageGroup + " , " + numOfVisits + " , " + MMax + " , " + MMin + " , " + MNor);
-				count++;
+				//System.out.println(zipcode + " , " + county + " , " + city + " , " + state + " , " + year + " , " + month + " , " + ageGroup + " , " + numOfVisits + " , " + MMax + " , " + MMin + " , " + MNor);
+				//count++;
 			}	
-			System.out.println("Total = " + count);
+			//System.out.println("Total = " + count);
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		
 		return list;
 	}
 	
@@ -195,33 +196,24 @@ public class HealthData {
 	 * contains the updated info, then pass to this function as a parameter
 	 */
 	public void updateData(Health h){
-		try {
-			connection = DriverManager.getConnection(jdbcURL, MySQLConfig.user, MySQLConfig.password);
-			Scanner sc = new Scanner(System.in);
-			
-			/* Update value in health table */
-			UPDATE_SET_VALUE += "year = " + h.getYear() + ", numberofvisits = " + h.getNumOfVisits();	
-			CONDITION += "zipcode = " + h.getZipCode() + ", agegroup = " + h.getAgeGroup();
-			
-			PreparedStatement statement = (PreparedStatement) connection.prepareStatement(UPDATE_HEALTH_QUERY);
-			statement.executeUpdate();
-			UPDATE_SET_VALUE = "";
-			CONDITION = "";
-			
-			/* Update value in weather table */
-			UPDATE_SET_VALUE += "year = " + h.getYear() + ", month = " + h.getMonth() + ", monthlyMax = " + h.getMMax()
-					+ ", monthlyMin = " + h.getMMin() + ", monthlyNor = " + h.getMNor();
-			CONDITION += "city = " + h.getCity();
-			statement = (PreparedStatement) connection.prepareStatement(UPDATE_HEALTH_QUERY);
-			statement.executeUpdate();
-			UPDATE_SET_VALUE = "";
-			CONDITION = "";
-			
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
+        try {
+                connection = DriverManager.getConnection(jdbcURL, MySQLConfig.user, MySQLConfig.password);
+                Scanner sc = new Scanner(System.in);
+                Statement statement = connection.createStatement();
+
+                String healthUpdate = "UPDATE health set county = '" + h.getCounty() + "', numberOfVisits = " + h.getNumOfVisits() + " where zipCode = " + h.getZipCode() + " and ageGroup = '" + h.getAgeGroup() + "' and year = " + h.getYear();
+                String weatherUpdate = "UPDATE weather set city = '" + h.getCity() + "', year = '" + h.getYear() + "', month = '" + h.getMonth() + "', monthlyMax = '" + h.getMMax() + "', MonthlyMin = '" + h.getMMin() +"', monthlyNor = '" + h.getMNor() + "' where city = '" + h.getCity() + "'";
+
+                statement.execute(healthUpdate);
+                statement.execute(weatherUpdate);
+                statement.execute("COMMIT");
+                connection.close();
+
+        } catch (SQLException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+        }
+}
 	
 	public void searchData(Health h){
 		boolean comma = false;
@@ -288,12 +280,30 @@ public class HealthData {
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+		}				
+	}
+	
+	public ArrayList<String> selectAgeGroup(int zipcode)
+	{
+		ArrayList<String> list = new ArrayList<String>();
+		int i = 0;
+		try {
+			connection = DriverManager.getConnection(jdbcURL, MySQLConfig.user, MySQLConfig.password);
+			Statement stmt = connection.createStatement();
+			String QUERY = "select ageGroup from health where zipCode = ";
+			ResultSet result = stmt.executeQuery(QUERY + zipcode);
+			while (result.next())
+			{
+				list.add(result.getString(i));
+				i++;
+			}
+			connection.close();
+		}catch (Exception e) {
+			e.printStackTrace();
 		}
-		
+		return list;
 		
 	}
 	
 	
 }
-
-
