@@ -11,7 +11,7 @@ import java.sql.SQLException;
  *
  * @author christopherbachner
  */
-public class ParseTest {
+public class ParseLauncher {
 
     public static void main (String[] args)
     {
