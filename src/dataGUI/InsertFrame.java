@@ -1,14 +1,22 @@
 package dataGUI;
 
+import java.awt.BorderLayout;
+import java.awt.EventQueue;
+
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.border.EmptyBorder;
 import net.miginfocom.swing.MigLayout;
 import retrieveData.Health;
 import retrieveData.HealthData;
 
-import javax.swing.*;
-import javax.swing.border.EmptyBorder;
-import java.awt.event.ActionEvent;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JTextField;
+import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.sql.SQLException;
+import java.awt.event.ActionEvent;
 
 public class InsertFrame extends JFrame {
 	
