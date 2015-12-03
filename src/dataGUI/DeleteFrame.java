@@ -160,8 +160,9 @@ public class DeleteFrame extends JFrame {
 					
 					
 				    healthData.deleteData(health);
-					setVisible(false);
 				}
+				dispose();
+				setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 			}
 		});
 		contentPane.add(btnSubmit, "cell 1 5,alignx right");

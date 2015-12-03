@@ -166,8 +166,10 @@ public class InsertFrame extends JFrame {
 						// TODO Auto-generated catch block
 						e1.printStackTrace();
 					}
-					setVisible(false);
+					
 				}
+				dispose();
+				setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 			}
 		});
 		contentPane.add(btnSubmit, "cell 1 5,alignx right");
