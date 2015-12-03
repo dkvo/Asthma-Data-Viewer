@@ -15,6 +15,7 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.awt.event.ActionEvent;
 
+
 import retrieveData.Health;
 import retrieveData.HealthData;
 
@@ -71,7 +72,7 @@ public class WeatherFrame extends JFrame {
 				frame.setVisible(true);
             }
         });
-        btnInsert.setBounds(315, 217, 117, 29);
+        btnInsert.setBounds(279, 217, 117, 29);
         contentPane.add(btnInsert);
 
         JButton btnDelete = new JButton("delete");
@@ -81,7 +82,7 @@ public class WeatherFrame extends JFrame {
             	delete.setVisible(true);
             }
         });
-        btnDelete.setBounds(444, 217, 117, 29);
+        btnDelete.setBounds(412, 217, 117, 29);
         contentPane.add(btnDelete);
 
         JButton btnSearch = new JButton("search");
@@ -91,7 +92,7 @@ public class WeatherFrame extends JFrame {
             	search.setVisible(true);
             }
         });
-        btnSearch.setBounds(573, 217, 117, 29);
+        btnSearch.setBounds(530, 217, 117, 29);
         contentPane.add(btnSearch);
 
         JLabel lblWeatherTable = new JLabel("Weather Table");
@@ -105,7 +106,7 @@ public class WeatherFrame extends JFrame {
             	update.setVisible(true);
             }
         });
-        btnNext.setBounds(198, 217, 117, 29);
+        btnNext.setBounds(150, 217, 117, 29);
         contentPane.add(btnNext);
 
         JButton btnRefresh = new JButton("refresh");
@@ -114,8 +115,18 @@ public class WeatherFrame extends JFrame {
             	new WeatherFrame();
             }
         });
-        btnRefresh.setBounds(81, 217, 117, 29);
+        btnRefresh.setBounds(29, 217, 117, 29);
         contentPane.add(btnRefresh);
+        
+        JButton btnAnalyze = new JButton("Analyze");
+        btnAnalyze.addActionListener(new ActionListener() {
+        	public void actionPerformed(ActionEvent e) {
+        		AnalyzeFrame analyze = new AnalyzeFrame();
+        		analyze.setVisible(true);
+        	}
+        });
+        btnAnalyze.setBounds(662, 217, 117, 29);
+        contentPane.add(btnAnalyze);
     }
 
     @SuppressWarnings("serial")
@@ -140,5 +151,4 @@ public class WeatherFrame extends JFrame {
         	model.addRow(data);
         }
     }
-    
 }

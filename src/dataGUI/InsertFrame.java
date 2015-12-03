@@ -166,7 +166,7 @@ public class InsertFrame extends JFrame {
 						// TODO Auto-generated catch block
 						e1.printStackTrace();
 					}
-					setVisible(false);
+					setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 				}
 			}
 		});

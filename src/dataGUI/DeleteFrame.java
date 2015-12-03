@@ -160,7 +160,7 @@ public class DeleteFrame extends JFrame {
 					
 					
 				    healthData.deleteData(health);
-					setVisible(false);
+				    setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 				}
 			}
 		});

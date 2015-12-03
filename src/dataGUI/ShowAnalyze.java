@@ -9,49 +9,45 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 
+import retrieveData.AnalyzeData;
 import retrieveData.Health;
-
-import javax.swing.JTabbedPane;
-import javax.swing.JScrollPane;
 import javax.swing.JTable;
-import javax.swing.JTextField;
+import javax.swing.JScrollPane;
 
-public class ShowSearch extends JFrame {
+public class ShowAnalyze extends JFrame {
 
-	String[] columnNames = {"zipcode", "county", "city", "state", "year", "month","ageGroup",
-            "numOfVisits", "MonthlyMax", "MonthlyMin", "MonthlyNor"};
-	private DefaultTableModel model;
-	
 	private JPanel contentPane;
-	Health health = new Health();
+	String[] columnNames = {"county", "year", "avgVisits", "avg(monthlyNor)"};
+	private DefaultTableModel model;
+	ArrayList<AnalyzeData> list;
 	private JTable table;
-	ArrayList<Health> list;
+	
 
 	/**
 	 * Create the frame.
 	 * @param arrayList 
 	 */
-	public ShowSearch(ArrayList<Health> arrayList) {
+	public ShowAnalyze(ArrayList<AnalyzeData> arrayList) {
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		setBounds(100, 100, 800, 300);
+		setBounds(100, 100, 450, 300);
 		contentPane = new JPanel();
-		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
-		this.list  = new ArrayList<Health>();
+		
+		JScrollPane scrollPane = new JScrollPane();
+		scrollPane.setBounds(6, 6, 438, 266);
+		contentPane.add(scrollPane);
+		this.list  = new ArrayList<AnalyzeData>();
 		for (int i = 0; i < arrayList.size(); i++)
 			list.add(arrayList.get(i));
 		
-		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setBounds(6, 6, 788, 266);
-		contentPane.add(scrollPane);
 		populateTable();
-		table = new JTable(model);
+		table = new JTable();
 		scrollPane.setViewportView(table);
-		
-		
 	}
-public void populateTable() {
+	
+	
+	public void populateTable() {
     	
     	model = new DefaultTableModel(){
     	
@@ -66,8 +62,7 @@ public void populateTable() {
             model.addColumn(name);
         for(int i = 0; i< list.size(); i++) {
         	System.out.println(list.get(i));
-        	Object[] data = {list.get(i).getZipCode(), list.get(i).getCounty(), list.get(i).getCounty(), list.get(i).getState(),list.get(i).getYear(),
-        			         list.get(i).getMonth(), list.get(i).getAgeGroup(), list.get(i).getNumOfVisits(), list.get(i).getMMax(), list.get(i).getMMin(), list.get(i).getMNor()};
+        	Object[] data = {list.get(i).getCounty(), list.get(i).getYear(), list.get(i).getAvgVisit(), list.get(i).getAVG()};
         	model.addRow(data);
         }
     }

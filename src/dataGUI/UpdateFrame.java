@@ -159,7 +159,7 @@ public class UpdateFrame extends JFrame {
 					
 					
 					healthData.updateData(health);
-					setVisible(false);
+					setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 				}
 			}
 		});
