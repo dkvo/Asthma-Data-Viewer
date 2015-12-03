@@ -105,8 +105,8 @@ public class HealthData {
 			boolean notFirst = false;
 			
 			
-			DELETE_HEALTH_QUERY += "zipcode =" + h.getZipCode() + " and county = \"" + h.getCounty() + "\"" + " and year = " + h.getYear()
-					+ " and agegroup = \"" + h.getAgeGroup() + "\"" + " and numberOfVisits =" + h.getNumOfVisits();
+			DELETE_HEALTH_QUERY += "zipcode =" + h.getZipCode() + " and county = \'" + h.getCounty() + "\'" + " and year = " + h.getYear()
+					+ " and agegroup = \'" + h.getAgeGroup() + "\'" + " and numberOfVisits =" + h.getNumOfVisits();
 		
 			PreparedStatement stmt = (PreparedStatement) connection.prepareStatement(DELETE_HEALTH_QUERY);
 			int rowsInserted = stmt.executeUpdate();
@@ -115,8 +115,8 @@ public class HealthData {
 			}
 			DELETE_HEALTH_QUERY = "delete from health where ";
 		/* Delete in region table */
-			DELETE_REGION_QUERY += "county = \"" + h.getCounty() + "\"" + " and zipcode =" + h.getZipCode() + " and city = \"" + h.getCity() + "\"" 
-					+ " and state = \"" + h.getState() + "\"";
+			DELETE_REGION_QUERY += "county = \'" + h.getCounty() + "\'" + " and zipcode =" + h.getZipCode() + " and city = \'" + h.getCity() + "\'" 
+					+ " and state = \'" + h.getState() + "\'";
 			stmt = (PreparedStatement) connection.prepareStatement(DELETE_REGION_QUERY);
 			System.out.println(stmt);
 			rowsInserted = stmt.executeUpdate();
@@ -126,14 +126,15 @@ public class HealthData {
 			DELETE_REGION_QUERY = "delete from region where ";
 			
 			/* Delete from weather table */
-			DELETE_WEATHER_QUERY += "city = \"" + h.getCity() + "\"" + " and year =" + h.getYear() + " and month =" + h.getMonth()
-					+ "and MonthlyMax =" + h.getMMax() + " and MonthlyMin =" + h.getMMin() + " and monthlyNor =" + h.getMNor();
+			DELETE_WEATHER_QUERY = "delete from weather where ";
+			DELETE_WEATHER_QUERY += "city = \'" + h.getCity() + "\'" + " and year =" + h.getYear() + " and month =" + h.getMonth()
+					+ " and MonthlyMax =" + h.getMMax() + " and MonthlyMin =" + h.getMMin() + " and monthlyNor =" + h.getMNor();
 			stmt = (PreparedStatement) connection.prepareStatement(DELETE_WEATHER_QUERY);
 			rowsInserted = stmt.executeUpdate();
 			if (rowsInserted > 0) {
 			    System.out.println("The row has been deleted in weather table");
 			}
-			DELETE_WEATHER_QUERY = "delete from weather where ";
+
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -224,10 +225,11 @@ public class HealthData {
 				comma = true;
 			}
 			
+
 			if(!h.getAgeGroup().equals("") && comma == true){
-				CONDITION += ", agegroup = \"" + h.getAgeGroup() + "\"";
+				CONDITION += ", agegroup = \'" + h.getAgeGroup() + "\'";
 			}
-			else CONDITION += "agegroup = \"" + h.getAgeGroup() + "\"";
+			else CONDITION += "agegroup = \'" + h.getAgeGroup() + "\'";
 			
 			
 			
